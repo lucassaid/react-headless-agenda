@@ -127,12 +127,8 @@ We'll simply use flexbox to display these columns.
   <br>
 
   ```tsx
-    import Agenda from './Agenda'
-    import Columns from './Columns'
+    import Agenda, { Columns, HoursColumn, Day, Needle } from 'react-headless-agenda'
     import { format } from 'date-fns'
-    import HoursColumn from './HoursColumn'
-    import Day from './Day'
-    import Needle from './Needle'
     import { useState } from 'react'
 
     const Event = ({ title, top, bottom, className }) => (

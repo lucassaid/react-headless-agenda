@@ -18,12 +18,12 @@ interface ChildrenProps {
   }[]
 }
 
-interface DayColumnProps {
+interface DayProps {
   date: Date,
   children: (props: ChildrenProps) => JSX.Element | JSX.Element[]
 }
 
-export default function Day({ date, children }: DayColumnProps) {
+export default function Day({ date, children }: DayProps) {
 
   const { events: allEvents } = useContext(AgendaContext)
   const [columnHeight, setColumnHeight] = useState(0)
