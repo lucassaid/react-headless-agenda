@@ -1,46 +1,452 @@
-# Getting Started with Create React App
+# Headless agenda for react
+Completely unstyled components that help you to make your own agenda. Give it a try! It can look confusing at first but I really think you'll like it.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+How it looks with some styling:
 
-## Available Scripts
+![day](./assets/complete_agenda.png)
 
-In the project directory, you can run:
+<br>
 
-### `npm start`
+You can easily adapt it for mobile!
+<br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![vertical_example](./assets/vertical_example.gif)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Installation
 
-### `npm run build`
+```bash
+npm i react-headless-agenda
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br>
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Usage
+### Please read this guide, it takes 2 minutes!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## `<Agenda>`
+Our parent component. It doesn't require any parameter, but you might want to pass it a start day, and some events.
 
-### `npm run eject`
+```tsx
+// only `start` and `end` are required!
+const events = [
+  {
+    id: 'event1',
+    someTitle: 'Hey there!',
+    start: /* event start Date */,
+    end: /* event end Date */
+  }
+]
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+// we'll show current week from its start
+<Agenda
+  startDate={startOfWeek(new Date())}
+  events={events}
+>
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<br>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## `<Columns>`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+It lets you render whatever you need to for each day. For example, let's render its name and number:
 
-## Learn More
+![days header](./assets/days_header.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```tsx
+<div className="flex">
+  <Columns>
+    {({ date, key }) => (
+      <div key={key} className="flex-1">
+        {format(date, 'ccc d')}
+      </div>
+    )}
+  </Columns>
+</div>
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<br>
+
+## `<Day>`
+
+It lets you render the events of a day:
+
+![day](./assets/day.png)
+
+```tsx
+<Day date={new Date()} >
+  {({ containerRef, events }) => (
+    <div
+      ref={containerRef}
+      className="relative h-full"
+    >
+      {events.map(({ event, top, bottom }) => (
+        <div
+          className="absolute w-full p-4 rounded-lg"
+          style={{ top, bottom }}
+        >
+          {event.someTitle}
+        </div>
+      ))}
+    </div>
+  )}
+</Day>
+```
+
+That's it! We also have `<HoursColumn>` and `<Needle>`, but you'll see them as you go.
+
+<br>
+<br>
+
+# Examples
+
+For these examples I'll assume you have an array with events, where each event has
+  - `start` (required)
+  - `end` (required)
+  - `id`
+  - `title`
+  - `className`
+
+And also let's say we use [TailwindCSS](https://tailwindcss.com/) because we can't live without it.
+
+
+## Basic agenda
+
+![basic_example](./assets/basic_agenda.png)
+
+Here we'll use `<Cointainer>` two times, one for the header (with the name of the days) and another one to show the events. See how we use `<Day>` for each day.
+
+We'll simply use flexbox to display these columns.
+
+<details>
+  <summary>See code</summary>
+
+  <br>
+
+  ```tsx
+    import Agenda from './Agenda'
+    import Columns from './Columns'
+    import { format } from 'date-fns'
+    import HoursColumn from './HoursColumn'
+    import Day from './Day'
+    import Needle from './Needle'
+    import { useState } from 'react'
+
+    const Event = ({ title, top, bottom, className }) => (
+      <div
+        className={`absolute w-full p-4 rounded-lg ${className}`}
+        style={{ top, bottom }}
+      >
+        {title}
+      </div>
+    )
+
+    export default function BasicAgenda() {
+      return (
+        <Agenda
+          startDate={new Date()}
+          events={events}
+        >
+          {() => (
+            <>
+              <div className="flex mb-10">
+                <Columns>
+                  {({ date, key }) => (
+                    <div key={key} className="text-center flex-1">
+                      {format(date, 'ccc d')}
+                    </div>
+                  )}
+                </Columns>
+              </div>
+              <div
+                className="flex gap-4"
+                style={{ height: 700 }}
+              >
+                <Columns>
+                  {({ date, key }) => (
+                    <Day key={key} date={date} >
+                      {({ containerRef, events }) => (
+                        <div
+                          ref={containerRef}
+                          className="relative h-full flex-1"
+                        >
+                          {events.map(({ event, top, bottom }) => (
+                            <Event
+                              key={event.id}
+                              top={top}
+                              bottom={bottom}
+                              {...event}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </Day>
+                  )}
+                </Columns>
+              </div>
+            </>
+          )}
+        </Agenda>
+      )
+    }
+  ```
+</details>
+
+<br>
+
+## Complete agenda with navigation
+
+![complete_example](./assets/complete_agenda.png)
+
+What will add here
+- `prev` and `next` functions to navigate
+- `<HoursColumn>` to render the hours at the left
+- `<Needle>` (that line at the right left) to show the current time
+
+This time We'll use CSS Grid
+
+<details>
+  <summary>See code</summary>
+
+  <br>
+
+  ```tsx
+    const Event = ({ title, top, bottom, className }) => (
+      <div
+        className={`absolute w-full p-4 rounded-lg ${className}`}
+        style={{ top, bottom }}
+      >
+        {title}
+      </div>
+    )
+
+    export default function CompleteAgenda() {
+
+      const [startDate, setStartDate] = useState(new Date())
+
+      return (
+        <Agenda
+          startDate={startDate}
+          onStartDateChange={setStartDate}
+          events={events}
+        >
+          {({ prev, next }) => (
+            <>
+              <div className="flex justify-center gap-x-5 items-center mb-10">
+                <CaretLeft onClick={prev} />
+                <h5>{format(startDate, 'MMMM')}</h5>
+                <CaretRight onClick={next} />
+              </div>
+              <div
+                className="grid gap-4"
+                style={{ gridTemplateColumns: 'repeat(8, 1fr)' }}
+              >
+                <div />
+                <Columns>
+                  {({ date, key }) => (
+                    <div key={key} className="text-center">
+                      {format(date, 'ccc d')}
+                    </div>
+                  )}
+                </Columns>
+                <div className="text-center">
+                  <HoursColumn>
+                    {({ hour }) => (
+                      <div key={hour} className="opacity-30 py-1">
+                        {hour} hs
+                      </div>
+                    )}
+                  </HoursColumn>
+                </div>
+                <Columns>
+                  {({ date, key }) => (
+                    <Day key={key} date={date} >
+                      {({ containerRef, events }) => (
+                        <div
+                          ref={containerRef}
+                          className="relative h-full"
+                        >
+                          {events.map(({ event, top, bottom }) => (
+                            // @ts-ignore
+                            <Event key={event.title} {...event} top={top} bottom={bottom} />
+                          ))}
+                          <Needle>
+                            {({ top }) => (
+                              <div
+                                className="absolute h-1 bg-red-400 z-40 w-full"
+                                style={{ top }}
+                              />
+                            )}
+                          </Needle>
+                        </div>
+                      )}
+                    </Day>
+                  )}
+                </Columns>
+              </div>
+            </>
+          )}
+        </Agenda>
+      )
+    }
+  ```
+</details>
+
+<br>
+
+## 3 day agenda
+
+![3_days_example](./assets/3_days.png)
+
+This is actually the same code as the previous example! Only provide a custom `days`:
+
+```tsx
+<Agenda
+  startDate={startDate}
+  onStartDateChange={setStartDate}
+  events={events}
+  days={3} // <----
+>
+```
+And if your are using CSS Grid, the container will look like this:
+
+```tsx
+<div
+  className="grid"
+  style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
+>
+```
+
+<br>
+
+## Vertical agenda
+
+![vertical_example](./assets/vertical_example.gif)
+
+Cool! And the code isn't that complicated:
+
+We'll place a `<HoursColumn>` inside the day container this time.
+
+<details>
+  <summary>See code</summary>
+
+  <br>
+
+  ```tsx
+    const Event = ({ title, top, bottom, className }) => (
+      <div
+        className={`absolute w-full p-4 rounded-lg ${className}`}
+        style={{ top, bottom }}
+      >
+        {title}
+      </div>
+    )
+
+    export default function VerticalAgendaDemo() {
+
+      return (
+        <Agenda events={events} >
+          {() => (
+            <Columns>
+              {({ date, key }) => (
+                <Day key={key} date={date} >
+                  {({ containerRef, events }) => (
+                    <div>
+                      <h4 className="mt-6 py-4">
+                        {format(date, 'EEEE d')}
+                      </h4>
+                      <div
+                        ref={containerRef}
+                        className="flex gap-x-3"
+                      >
+                        <div>
+                          <HoursColumn>
+                            {({ hour }) => (
+                              <div key={hour} className="opacity-30 py-1">
+                                {hour} hs
+                              </div>
+                            )}
+                          </HoursColumn>
+                        </div>
+                        <div className="flex-1 relative">
+                          {events.map(({ event, top, bottom }) => (
+                            <Event
+                              key={event.id}
+                              top={top}
+                              bottom={bottom}
+                              {...event}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Day>
+              )}
+            </Columns>
+          )}
+        </Agenda>
+      )
+    }
+  ```
+</details>
+
+<br>
+
+# Notes
+
+You receive all the event inside `<Day>`, you might want to use `start` and `end`:
+
+![with_time](./assets/with_time.png)
+
+<details>
+  <summary>See code</summary>
+
+  <br>
+
+  ```tsx
+    const Event = ({ title, top, bottom, className, start, end }) => (
+      <div
+        className={`absolute w-full p-4 rounded-lg ${className}`}
+        style={{ top, bottom }}
+      >
+        {title}
+        <br />
+        {format(start, 'HH:mm')}
+        &nbsp;-&nbsp;
+        {format(end, 'HH:mm')}
+      </div>
+    )
+  ```
+</details>
+
+<br>
+
+The main render function also provides `endDate`, useful to show the current range of days:
+
+![endDate](./assets/endDate.png)
+
+<details>
+  <summary>See code</summary>
+
+  <br>
+
+  ```tsx
+    <Agenda>
+      {({ prev, next, endDate }) => (
+        <div className="flex justify-center gap-x-5 items-center">
+          <CaretLeft onClick={prev} />
+          <h5>
+            {format(startDate, 'd/M')}
+            &nbsp; - &nbsp;
+            {format(endDate, 'd/M')}
+          </h5>
+          <CaretRight onClick={next} />
+        </div>
+      )}
+    </Agenda>
+  ```
+</details>
