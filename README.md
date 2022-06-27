@@ -1,3 +1,8 @@
+<img
+  src="./assets/logo.svg"
+  alt="Headless agenda for react"
+  width="100"
+/>
 # Headless agenda for react
 Completely unstyled components that help you to make your own agenda. Give it a try! It can look confusing at first but I really think you'll like it.
 
