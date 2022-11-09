@@ -122,7 +122,7 @@ And also let's say we use [TailwindCSS](https://tailwindcss.com/) because we can
 
 ![basic_example](./assets/basic_agenda.png)
 
-Here we'll use `<Cointainer>` two times, one for the header (with the name of the days) and another one to show the events. See how we use `<Day>` for each day.
+Here we'll use `<Columns>` two times, one for the header (with the name of the days) and another one to show the events. See how we use `<Day>` for each day.
 
 We'll simply use flexbox to display these columns.
 
