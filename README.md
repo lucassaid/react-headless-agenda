@@ -271,7 +271,6 @@ This time We'll use CSS Grid
                           className="relative h-full"
                         >
                           {events.map(({ event, top, bottom }) => (
-                            // @ts-ignore
                             <Event key={event.title} {...event} top={top} bottom={bottom} />
                           ))}
                           <Needle>

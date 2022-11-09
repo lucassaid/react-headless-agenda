@@ -1,10 +1,10 @@
 import { isToday } from 'date-fns'
 import { dateToPixels } from './utils'
-import { useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 import { DayContext } from './Day'
 
 interface NeedleProps {
-  children: (props: { top: number }) => JSX.Element
+  children: (props: { top: number }) => ReactNode
 }
 
 export default function Needle({ children }: NeedleProps) {

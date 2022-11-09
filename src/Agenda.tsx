@@ -1,4 +1,5 @@
 import { addDays, subDays, startOfWeek } from 'date-fns'
+import { ReactNode } from 'react'
 import AgendaContext, { AgendaContextType } from './context'
 import { AgendaEvent } from './types'
 
@@ -13,7 +14,7 @@ interface AgendaProps<TEvent> {
   onStartDateChange?: (newDate: Date) => void
   events?: TEvent[]
   days?: number
-  children: (props: ChildrenProps) => JSX.Element | JSX.Element[]
+  children: (props: ChildrenProps) => ReactNode
 }
 
 export default function Agenda<TEvent extends AgendaEvent>({

@@ -1,5 +1,5 @@
-import { isSameDay, isWithinInterval } from 'date-fns'
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { differenceInMinutes, isSameDay, isWithinInterval, startOfDay } from 'date-fns'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import AgendaContext from './context'
 import { AgendaEvent } from './types'
 import { dateToPixels } from './utils'
@@ -20,7 +20,7 @@ interface ChildrenProps {
 
 interface DayProps {
   date: Date,
-  children: (props: ChildrenProps) => JSX.Element | JSX.Element[]
+  children: (props: ChildrenProps) => ReactNode
 }
 
 export default function Day({ date, children }: DayProps) {
@@ -38,8 +38,9 @@ export default function Day({ date, children }: DayProps) {
   const events = useMemo(() => {
 
     const columnEvents = allEvents.filter(({ start, end }) => {
-      const startsOrEndsThisDay = isSameDay(start, date) || isSameDay(end, date)
-      return startsOrEndsThisDay || isWithinInterval(date, { start, end })
+      if (differenceInMinutes(end, startOfDay(date)) === 0) return false
+      if (isSameDay(start, date) || isSameDay(end, date)) return true
+      return isWithinInterval(date, { start, end })
     })
 
     return columnEvents.map(event => {
