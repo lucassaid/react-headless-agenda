@@ -4,7 +4,7 @@
   width="100"
 />
 # Headless agenda for react
-Completely unstyled components that help you to make your own agenda. Give it a try! It can look confusing at first but I really think you'll like it.
+Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look confusing at first but I really think you'll like it.
 
 How it looks with some styling:
 
@@ -31,37 +31,42 @@ npm i react-headless-agenda
 
 # Usage
 ### Please read this guide, it takes 2 minutes!
+All examples use [date-fns](https://www.npmjs.com/package/date-fns) but you can use the library of your choice to manipulate dates.
 
 ## `<Agenda>`
 Our parent component. It doesn't require any parameter, but you might want to pass it a start day, and some events.
 
 ```tsx
-// only `start` and `end` are required!
+import { startOfWeek, addHours }  from 'date-fns'
+
+// only `start` and `end` are required! This event starts now and ends in five hours
 const events = [
   {
     id: 'event1',
     someTitle: 'Hey there!',
-    start: /* event start Date */,
-    end: /* event end Date */
+    start: new Date(),
+    end:  addHours(new Date(), 5),
   }
 ]
 
-// we'll show current week from its start
+// we'll display the current week from its start
 <Agenda
   startDate={startOfWeek(new Date())}
   events={events}
->
+/>
 ```
 
 <br>
 
 ## `<Columns>`
 
-It lets you render whatever you need to for each day. For example, let's render its name and number:
+It lets you render whatever you need to, for each day. For example, let's render its name and number:
 
 ![days header](./assets/days_header.png)
 
 ```tsx
+import { format }  from 'date-fns'
+
 <div className="flex">
   <Columns>
     {({ date, key }) => (
@@ -82,6 +87,7 @@ It lets you render the events of a day:
 ![day](./assets/day.png)
 
 ```tsx
+// this will be inside <Agenda/> and will receive the events from the context. Full examples below.
 <Day date={new Date()} >
   {({ containerRef, events }) => (
     <div
@@ -203,11 +209,11 @@ We'll simply use flexbox to display these columns.
 ![complete_example](./assets/complete_agenda.png)
 
 What will add here
-- `prev` and `next` functions to navigate
+- `prev` and `next` functions to navigate between weeks
 - `<HoursColumn>` to render the hours at the left
-- `<Needle>` (that line at the right left) to show the current time
+- `<Needle>` (that red line at the top left) to indicate the current time
 
-This time We'll use CSS Grid
+This time we'll use CSS Grid
 
 <details>
   <summary>See code</summary>
@@ -396,7 +402,7 @@ We'll place a `<HoursColumn>` inside the day container this time.
 
 <br>
 
-# Notes
+# Tips
 
 You receive all the event inside `<Day>`, you might want to use `start` and `end`:
 
