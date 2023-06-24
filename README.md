@@ -140,7 +140,6 @@ We'll simply use flexbox to display these columns.
   ```tsx
     import Agenda, { Columns, HoursColumn, Day, Needle } from 'react-headless-agenda'
     import { format } from 'date-fns'
-    import { useState } from 'react'
 
     const Event = ({ title, top, bottom, className }) => (
       <div
@@ -221,6 +220,10 @@ This time we'll use CSS Grid
   <br>
 
   ```tsx
+    import Agenda, { Columns, HoursColumn, Day, Needle } from 'react-headless-agenda'
+    import { format } from 'date-fns'
+    import { useState } from 'react'
+
     const Event = ({ title, top, bottom, className }) => (
       <div
         className={`absolute w-full p-4 rounded-lg ${className}`}
@@ -441,18 +444,27 @@ The main render function also provides `endDate`, useful to show the current ran
   <br>
 
   ```tsx
-    <Agenda>
-      {({ prev, next, endDate }) => (
-        <div className="flex justify-center gap-x-5 items-center">
-          <CaretLeft onClick={prev} />
-          <h5>
-            {format(startDate, 'd/M')}
-            &nbsp; - &nbsp;
-            {format(endDate, 'd/M')}
-          </h5>
-          <CaretRight onClick={next} />
-        </div>
-      )}
-    </Agenda>
+    function MyAgenda() {
+      const [startDate, setStartDate] = useState(new Date())
+      return (
+        <Agenda
+          startDate={startDate}
+          onStartDateChange={setStartDate}
+          events={events}
+        >
+          {({ prev, next, endDate }) => (
+            <div className="flex justify-center gap-x-5 items-center">
+              <CaretLeft onClick={prev} />
+              <h5>
+                {format(startDate, 'd/M')}
+                &nbsp; - &nbsp;
+                {format(endDate, 'd/M')}
+              </h5>
+              <CaretRight onClick={next} />
+            </div>
+          )}
+        </Agenda>
+      )
+    }
   ```
 </details>
