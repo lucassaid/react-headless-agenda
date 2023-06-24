@@ -6,6 +6,18 @@
 # Headless agenda for react
 Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look confusing at first but I really think you'll like it.
 
+✅ Flexible
+
+✅ Controlled
+
+✅ Performant
+
+✅ Unestyled but easy to style
+
+✅ Uses the default `Date` object only
+
+<br>
+
 How it looks with some styling:
 
 ![day](./assets/complete_agenda.png)
@@ -34,7 +46,7 @@ npm i react-headless-agenda
 All examples use [date-fns](https://www.npmjs.com/package/date-fns) but you can use the library of your choice to manipulate dates.
 
 ## `<Agenda>`
-Our parent component. It doesn't require any parameter, but you might want to pass it a start day, and some events.
+Our parent component. Just provide a start day, and some events.
 
 ```tsx
 import { startOfWeek, addHours }  from 'date-fns'
@@ -49,12 +61,14 @@ const events = [
   }
 ]
 
-// we'll display the current week from its start
+// we'll display the current week from its start. `startDate` is basically the day you see at the left of the calendar.
 <Agenda
   startDate={startOfWeek(new Date())}
   events={events}
 />
 ```
+
+This is a controlled component. The agenda will NOT have an "inner" state in sync with `events` or `startDate`. Instead, it will fire an event for you to update `startDate` when needed. You'll find more of this in the examples, but for now bear with me for the rest of the components:
 
 <br>
 
@@ -468,3 +482,7 @@ The main render function also provides `endDate`, useful to show the current ran
     }
   ```
 </details>
+
+---
+
+PR's are welcome!
