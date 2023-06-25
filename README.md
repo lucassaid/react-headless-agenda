@@ -421,7 +421,7 @@ We'll place a `<HoursColumn>` inside the day container this time.
 
 # Tips
 
-You receive all the event inside `<Day>`, you might want to use `start` and `end`:
+You receive your full event inside `<Day>`, you might want to display `start` and `end`:
 
 ![with_time](./assets/with_time.png)
 
@@ -435,6 +435,7 @@ You receive all the event inside `<Day>`, you might want to use `start` and `end
       <div
         className={`absolute w-full p-4 rounded-lg ${className}`}
         style={{ top, bottom }}
+        onClick={goToEventScreen}
       >
         {title}
         <br />
