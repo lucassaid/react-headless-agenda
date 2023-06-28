@@ -1,0 +1,12 @@
+import { Canvas, Meta, Source } from '@storybook/blocks';
+import * as FullAgendaStories from './FullAgenda.stories';
+
+<Meta of={FullAgendaStories} />
+
+# Full Agenda example
+
+<Canvas of={FullAgendaStories.FullAgenda} />
+
+<Source
+  of={FullAgendaStories.FullAgendaDemo}
+/>

@@ -3,3 +3,8 @@ node_modules
 package-lock.json
 examples
 assets
+stories
+.eslintrc
+.storybook
+postcss.config.js
+tailwind.config.js

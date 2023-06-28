@@ -1,48 +1,57 @@
 import { addDays, subDays, startOfWeek } from 'date-fns'
-import { ReactNode } from 'react'
-import AgendaContext, { AgendaContextType } from './context'
-import { AgendaEvent } from './types'
+import { ReactNode, useRef } from 'react'
+import agendaContext, { AgendaContext, BaseAgendaEvent } from './context'
 
-interface ChildrenProps {
+export interface AgendaChildrenProps {
   next: () => void,
   prev: () => void,
   endDate: Date
 }
 
-interface AgendaProps<TEvent> {
+export interface AgendaProps<TEvent> {
   startDate?: Date
   onStartDateChange?: (newDate: Date) => void
-  events?: TEvent[]
+  events: TEvent[]
   days?: number
-  children: (props: ChildrenProps) => ReactNode
+  children: (props: AgendaChildrenProps) => ReactNode
+  onEventChange?: (event: TEvent) => void
+  onDragStart?: (eventId: string) => void
+  onDrop?: () => void
 }
 
-export default function Agenda<TEvent extends AgendaEvent>({
+export default function Agenda<TEvent extends BaseAgendaEvent>({
   startDate = startOfWeek(new Date()),
   onStartDateChange = () => { },
   events = [],
+  onEventChange = () => { },
   days = 7,
   children,
+  onDragStart = () => { },
+  onDrop = () => { },
 }: AgendaProps<TEvent>) {
 
-  const context: AgendaContextType<TEvent> = {
+  const contextValue: AgendaContext<TEvent> = {
     startDate,
     onStartDateChange,
     events,
+    onEventChange,
     days,
+    onDragStart,
+    onDrop,
   }
 
   const endDate = addDays(new Date(startDate), days - 1)
 
-  const childrenProps: ChildrenProps = {
+  const childrenProps: AgendaChildrenProps = {
     prev: () => onStartDateChange(subDays(new Date(startDate), days)),
     next: () => onStartDateChange(addDays(new Date(startDate), days)),
     endDate,
   }
 
   return (
-    <AgendaContext.Provider value={context}>
+    // @ts-ignore
+    <agendaContext.Provider value={contextValue}>
       {children(childrenProps)}
-    </AgendaContext.Provider>
+    </agendaContext.Provider>
   )
 }

@@ -1,7 +1,7 @@
 import { isToday } from 'date-fns'
 import { dateToPixels } from './utils'
-import { ReactNode, useContext } from 'react'
-import { DayContext } from './Day'
+import { ReactNode, useContext, useEffect, useState } from 'react'
+import { dayContext } from './Day'
 
 interface NeedleProps {
   children: (props: { top: number }) => ReactNode
@@ -9,10 +9,24 @@ interface NeedleProps {
 
 export default function Needle({ children }: NeedleProps) {
 
-  const { columnHeight, date } = useContext(DayContext)
-  if (!isToday(date)) return null
+  const { columnHeight, date } = useContext(dayContext)
 
-  const top = dateToPixels(new Date(), columnHeight)
+  const [top, setTop] = useState(dateToPixels(new Date(), columnHeight))
+
+  useEffect(() => {
+    // Update the needle when the column height changes
+    setTop(dateToPixels(new Date(), columnHeight))
+  }, [columnHeight])
+
+  useEffect(() => {
+    // Update the needle every minute
+    const interval = setInterval(() => {
+      setTop(dateToPixels(new Date(), columnHeight))
+    }, 60 * 1000)
+    return () => clearInterval(interval)
+  }, [columnHeight])
+
+  if (!isToday(date)) return null
 
   return (
     <>

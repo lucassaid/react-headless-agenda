@@ -6,6 +6,8 @@
 # Headless agenda for react
 Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look confusing at first but I really think you'll like it.
 
+This library makes it easy to display events in their respective columns or "days", with the corresponding heights based on their durations. It's not meant to be used as a "calendar" or a "month" view.
+
 ✅ Flexible
 
 ✅ Controlled
@@ -121,7 +123,7 @@ It lets you render the events of a day:
 </Day>
 ```
 
-That's it! We also have `<HoursColumn>` and `<Needle>`, but you'll see them as you go.
+That's it! We also have `<Ticks>` and `<Needle>`, but you'll see them as you go.
 
 <br>
 <br>
@@ -152,7 +154,7 @@ We'll simply use flexbox to display these columns.
   <br>
 
   ```tsx
-    import Agenda, { Columns, HoursColumn, Day, Needle } from 'react-headless-agenda'
+    import Agenda, { Columns, Ticks, Day, Needle } from 'react-headless-agenda'
     import { format } from 'date-fns'
 
     const Event = ({ title, top, bottom, className }) => (
@@ -223,10 +225,10 @@ We'll simply use flexbox to display these columns.
 
 What will add here
 - `prev` and `next` functions to navigate between weeks
-- `<HoursColumn>` to render the hours at the left
+- `<Ticks>` to render the hours at the left
 - `<Needle>` (that red line at the top left) to indicate the current time
 
-This time we'll use CSS Grid
+This time we'll use CSS Grid (easier to handle the left column with hours)
 
 <details>
   <summary>See code</summary>
@@ -234,7 +236,7 @@ This time we'll use CSS Grid
   <br>
 
   ```tsx
-    import Agenda, { Columns, HoursColumn, Day, Needle } from 'react-headless-agenda'
+    import Agenda, { Columns, Ticks, Day, Needle } from 'react-headless-agenda'
     import { format } from 'date-fns'
     import { useState } from 'react'
 
@@ -266,7 +268,7 @@ This time we'll use CSS Grid
               </div>
               <div
                 className="grid gap-4"
-                style={{ gridTemplateColumns: 'repeat(8, 1fr)' }}
+                style={{ gridTemplateColumns: '60px repeat(7, 1fr)' }}
               >
                 <div />
                 <Columns>
@@ -277,13 +279,13 @@ This time we'll use CSS Grid
                   )}
                 </Columns>
                 <div className="text-center">
-                  <HoursColumn>
+                  <Ticks>
                     {({ hour }) => (
                       <div key={hour} className="opacity-30 py-1">
                         {hour} hs
                       </div>
                     )}
-                  </HoursColumn>
+                  </Ticks>
                 </div>
                 <Columns>
                   {({ date, key }) => (
@@ -339,7 +341,7 @@ And if your are using CSS Grid, the container will look like this:
 ```tsx
 <div
   className="grid"
-  style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
+  style={{ gridTemplateColumns: '60px repeat(3, 1fr)' }}
 >
 ```
 
@@ -351,7 +353,7 @@ And if your are using CSS Grid, the container will look like this:
 
 Cool! And the code isn't that complicated:
 
-We'll place a `<HoursColumn>` inside the day container this time.
+We'll place a `<Ticks>` inside the day container this time.
 
 <details>
   <summary>See code</summary>
@@ -386,13 +388,13 @@ We'll place a `<HoursColumn>` inside the day container this time.
                         className="flex gap-x-3"
                       >
                         <div>
-                          <HoursColumn>
+                          <Ticks>
                             {({ hour }) => (
                               <div key={hour} className="opacity-30 py-1">
                                 {hour} hs
                               </div>
                             )}
-                          </HoursColumn>
+                          </Ticks>
                         </div>
                         <div className="flex-1 relative">
                           {events.map(({ event, top, bottom }) => (

@@ -1,5 +1,5 @@
 import { addDays } from 'date-fns'
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, ReactNode } from 'react'
 import context from './context'
 
 export interface WeekDayProps {
@@ -8,8 +8,7 @@ export interface WeekDayProps {
 }
 
 export interface WeekProps {
-  days?: number
-  children: (childrenProps: WeekDayProps) => JSX.Element,
+  children: (childrenProps: WeekDayProps) => ReactNode,
 }
 
 export default function Columns({ children }: WeekProps) {
