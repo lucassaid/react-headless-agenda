@@ -7,7 +7,7 @@ import { BaseAgendaEvent } from '../src/context'
 import { ExtendedEventProps } from '../src/types'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Drag And  Resize/ResizeOnly',
+  title: 'Drag And  Resize/ResizeInvisibleHandle',
   component: Agenda,
 }
 
@@ -47,13 +47,11 @@ const Event = (
       </small>
 
       <div
-        className="absolute bottom-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
+        className="absolute bottom-0 h-2 inset-x-0 cursor-ns-resize"
         draggable
         onDragStart={handleDragStart}
         onDrag={handleDrag}
-      >
-        Drag me!
-      </div>
+      />
     </div>
   )
 }
@@ -61,14 +59,14 @@ const Event = (
 const events: MyEventProps[] = [
   {
     id: '0',
-    title: 'Event 1',
+    title: 'I can be resized!',
     start: new Date(new Date().setHours(4, 0, 0, 0)),
     end: new Date(new Date().setHours(8, 0, 0, 0)),
     className: 'bg-lime-500 text-white',
   },
 ]
 
-export const ResizeOnly: Story = {
+export const ResizeInvisibleHandle: Story = {
   render: () => {
 
     const [startDate, setStartDate] = useState(subDays(new Date(), 1))

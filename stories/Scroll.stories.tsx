@@ -1,12 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, dateToPixels, mouseEventToDate } from '../src'
-import { addHours, format, roundToNearestMinutes, startOfHour, subHours, subMinutes } from 'date-fns'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import Agenda, { Columns, Day, Ticks, dateToPixels } from '../src'
+import { format, startOfWeek, subHours, subMinutes } from 'date-fns'
+import { useCallback } from 'react'
 import { Needle } from '../src'
 import { BaseAgendaEvent } from '../src/context'
-import { AgendaChildrenProps, AgendaProps } from '../src/Agenda'
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 
 const meta: Meta<typeof Agenda> = {
   title: 'Examples/Scroll',
@@ -58,25 +56,21 @@ const events: MyEventProps[] = [
 
 export const Scroll: Story = {
   render: () => {
-
-    const [startDate, setStartDate] = useState(new Date())
-
     /**
      * Scroll to some specific time on mount
      * In this case we use the start of the event
      */
     const scrollAreaRef = useCallback((node: HTMLDivElement) => {
       if (node) {
-        const dateToScrollTo = subMinutes(events[0].start, 30) // some margin at the top
+        const dateToScrollTo = subHours(events[0].start, 1) // some margin at the top
         const top = dateToPixels(dateToScrollTo, node.scrollHeight)
-        node.scrollTop = top
+        node.scrollTo({ top, behavior: 'smooth' })
       }
     }, [])
 
     return (
       <Agenda
-        startDate={startDate}
-        onStartDateChange={setStartDate}
+        startDate={startOfWeek(new Date())}
         events={events}
       >
         {() => (

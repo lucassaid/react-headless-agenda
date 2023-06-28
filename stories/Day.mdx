@@ -15,7 +15,7 @@ Use `<Day>` to render the markup for each event of the day
   {({ containerRef, events }) => (
     <div
       ref={containerRef}
-      className="relative h-80 text-orange-400 border border-orange-400 rounded-md p-3 max-w-sm"
+      className="relative h-80"
     >
       day container
       {events.map(({ event, top, bottom }) => (
@@ -50,26 +50,26 @@ Note you also have access to `event` which is the original event object you pass
 
 ### Composing `Day` and `Columns`
 
-You'll probably want to render `<Day>` inside a `<Columns>` component, so that the date is dynamically calculated based on the column it's rendered in.
+You'll probably want to render `<Day>` inside a `<Columns>` component, so you can pass `date` from each column:
 
 <Canvas of={DayStories.DayInsideColumns} />
 
 <Source
   code={`
-<div className="flex p-4 border border-sky-500 rounded-md gap-x-4 after:content-['holaaa']">
+<div className="flex gap-x-4">
   <Columns>
     {({ date, key }) => (
       <Day date={date} key={key}>
         {({ containerRef, events }) => (
           <div
             ref={containerRef}
-            className="relative h-80 text-orange-400 border border-orange-400 rounded-md p-3 flex-1"
+            className="relative flex-1"
           >
             day container
             {events.map(({ event, top, bottom }) => (
               <div
                 key={event.title}
-                className="absolute inset-x-3 p-4 rounded-lg border border-lime-500 text-lime-600"
+                className="absolute"
                 style={{ top, bottom }}
               >
                 {event.title}

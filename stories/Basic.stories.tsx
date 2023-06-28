@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
 import Agenda, { Columns, Day, Ticks } from '../src'
-import { addHours, format, subHours } from 'date-fns'
+import { addDays, addHours, format, startOfWeek, subHours } from 'date-fns'
 import { useState } from 'react'
 import { Needle } from '../src'
 import { BaseAgendaEvent } from '../src/context'
@@ -32,9 +32,9 @@ const Event = (
     {title}
     <br />
     <small>
-      {format(start, 'HH:mm')}
-      &nbsp;-&nbsp;
-      {format(end, 'HH:mm')}
+      {format(start, 'EEEE HH:mm')}<br />
+      ↓<br />
+      {format(end, 'EEEE HH:mm')}
     </small>
   </div>
 )
@@ -43,16 +43,23 @@ const events: MyEventProps[] = [
   {
     id: '0',
     title: 'Event 1',
-    start: subHours(new Date(), 2),
-    end: addHours(new Date(), 5),
+    start: addDays(new Date(new Date().setHours(5, 0, 0, 0)), -1),
+    end: addDays(new Date(new Date().setHours(12, 0, 0, 0)), -1),
     className: 'bg-blue-500 text-white',
+  },
+  {
+    id: '0',
+    title: 'Event 2',
+    start: addDays(new Date(new Date().setHours(19, 0, 0, 0)), 1),
+    end: addDays(new Date(new Date().setHours(5, 0, 0, 0)), 2),
+    className: 'bg-lime-500 text-white',
   }
 ]
 
 export const Basic: Story = {
   render: () => {
 
-    const [startDate, setStartDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()))
 
     return (
       <Agenda

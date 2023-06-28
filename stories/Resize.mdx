@@ -1,0 +1,154 @@
+import { Canvas, Meta, Source } from '@storybook/blocks';
+import { ResizeOnly } from './Resize.stories';
+import { EventProps } from './EventProps.stories';
+
+<Meta title="Drag And Resize/Resize" />
+
+# Resizable events
+
+Similar to the dragging logic, the state of the events is managed by you, outside the Agenda.
+
+An event can be resizable and not draggable, or vice-versa. You can also enable both.
+
+<Canvas of={ResizeOnly} />
+
+Now you'll need `useResize` in your event component.
+
+`useResize` returns an object with `handleDragStart` and `handleDrag`. Just pass them to the element you want to use as the handle.
+
+<Source
+  code={`
+<div
+  className="absolute bottom-2"
+  draggable
+  onDragStart={handleDragStart}
+  onDrag={handleDrag}
+>
+  Drag me!
+</div>
+  `}
+  language="tsx"
+/>
+
+
+So, the complete Event component would look like this:
+
+<Source
+  code={`
+const Event = (
+  { id, title, top, bottom, className, start, end }: MyEventProps & { top: number, bottom: number }
+) => {
+
+  const { handleDragStart, handleDrag } = useResize(id)
+
+  return (
+    <div
+      id={id}
+      key={id}
+      tabIndex={-1}
+      className={\`
+        absolute w-full p-4 rounded-lg select-none \${className}
+      \`}
+      style={{ top, bottom }}
+    >
+      {title}
+      <br />
+      <small>
+        {format(start, 'EEEEEE HH:mm')}
+        &nbsp;-&nbsp;
+        {format(end, 'EEEEEE HH:mm')}
+      </small>
+
+      <div
+        className="absolute bottom-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
+        draggable
+        onDragStart={handleDragStart}
+        onDrag={handleDrag}
+      >
+        Drag me!
+      </div>
+    </div>
+  )
+}
+  `}
+  language="tsx"
+/>
+
+Render a transparent handle to get the feel you are grabbing from the border
+
+<Source
+  code={`
+<div
+  className="absolute bottom-0 h-2 inset-x-0 cursor-ns-resize"
+  draggable
+  onDragStart={handleDragStart}
+  onDrag={handleDrag}
+/>
+  `}
+  language="tsx"
+/>
+
+
+
+While you resize an event, `onEventChange` will fire, so you can handle it exactly the same as you did for the dragging.
+
+<br/>
+
+# Advanced props
+
+The events you get from `<Day>` have some extra props that you can use to customize the dragging and resizing behavior, and the styling.
+
+### `startsBeforeToday` and `endsAfterToday`
+
+As the names implie, these props tell you if the event starts before the current day, or ends after the current day.
+Here I use these to:
+
+- Have border radius only at the start and end of the event, not every block
+- Show the resize handle only at the end of the event
+
+<Canvas of={EventProps} />
+
+<Source
+  code={`
+const Event = (
+  { id, title, top, bottom, className, start, end, startsBeforeToday, endsAfterToday }
+) => {
+
+  const { handleDragStart, handleDrag } = useResize(id)
+
+  return (
+    <div
+      id={id}
+      key={id}
+      tabIndex={-1}
+      className={\`
+        absolute w-full p-4 rounded-lg select-none \${className}
+        \${startsBeforeToday ? 'rounded-t-none' : ''}
+        \${endsAfterToday ? 'rounded-b-none' : ''}
+      \`}
+      style={{ top, bottom }}
+    >
+      {title}
+      <br />
+      <small>
+        {format(start, 'EEEEEE HH:mm')}
+        &nbsp;-&nbsp;
+        {format(end, 'EEEEEE HH:mm')}
+      </small>
+
+      {!endsAfterToday ? (
+        <div
+          className="absolute bottom-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
+          draggable
+          onDragStart={handleDragStart}
+          onDrag={handleDrag}
+        >
+          Drag me!
+        </div>
+      ) : null}
+    </div>
+  )
+}
+  `}
+  language="tsx"
+/>

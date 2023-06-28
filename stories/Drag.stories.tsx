@@ -44,8 +44,8 @@ const Event = (
       {title}
       <br />
       <small>
-        {format(start, 'EEEEEE HH:mm')}
-        &nbsp;-&nbsp;
+        {format(start, 'EEEEEE HH:mm')}<br />
+        ↓<br />
         {format(end, 'EEEEEE HH:mm')}
       </small>
     </div>
@@ -56,15 +56,15 @@ const events: MyEventProps[] = [
   {
     id: '0',
     title: 'Event 1',
-    start: subHours(new Date(), 2),
-    end: addHours(new Date(), 40),
+    start: addDays(new Date(new Date().setHours(5, 0, 0, 0)), -1),
+    end: addDays(new Date(new Date().setHours(12, 0, 0, 0)), -1),
     className: 'bg-lime-500 text-white',
   },
   {
     id: '1',
     title: 'Event 2',
-    start: addDays(subHours(new Date(), 2), 1),
-    end: addDays(addHours(new Date(), 5), 1),
+    start: addDays(new Date(new Date().setHours(3, 0, 0, 0)), 1),
+    end: addDays(new Date(new Date().setHours(14, 0, 0, 0)), 1),
     className: 'bg-sky-500 text-white',
   }
 ]
@@ -90,7 +90,7 @@ export const DragOnly: Story = {
         {() => (
           <>
             <div
-              className="grid gap-4 h-screen select-none"
+              className="grid gap-4 h-[600px] select-none"
               style={{
                 gridTemplateColumns: '60px repeat(7, 1fr)',
                 gridTemplateRows: 'min-content 1fr'
@@ -113,8 +113,8 @@ export const DragOnly: Story = {
                     {ticks.map(({ hour, top }) => (
                       <div
                         key={hour}
-                        className="text-slate-300 absolute right-2"
-                        style={{ top: top - 14 }}
+                        className="text-slate-300 absolute right-2 text-sm"
+                        style={{ top: top - 12 }}
                       >
                         {hour} hs
                       </div>
@@ -149,7 +149,7 @@ export const DragOnly: Story = {
                         <Needle>
                           {({ top }) => (
                             <div
-                              className="absolute h-1 bg-red-400 z-40 w-full"
+                              className="needle"
                               style={{ top }}
                             />
                           )}

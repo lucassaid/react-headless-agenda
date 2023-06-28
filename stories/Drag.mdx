@@ -1,0 +1,76 @@
+import { Canvas, Meta, Source } from '@storybook/blocks';
+import { DragOnly } from './Drag.stories';
+
+<Meta title="Drag And Resize/Drag" />
+
+# Make your events draggable
+
+With these simple steps, you'll allow your events to be draggable.
+
+The library is not updating your state, is not making any copy of the events, and is not manipulating the dom. All it does is calculate, and let you know, what is 
+the new start and end time for your event, based on the dragging. Then you can simply update your state accordingly.
+
+<Canvas of={DragOnly} />
+
+Use `useDragEvent` in your event component. Also set the property `draggable` in the container element.
+
+<Source
+  code={`
+const Event = (
+  { id, title, top, bottom, className, start, end }: MyEventProps & { top: number, bottom: number }
+) => {
+
+  const { handleDragStart } = useDragEvent(id)
+
+  return (
+    <div
+      id={id}
+      key={id}
+      tabIndex={-1}
+      className={\`
+        absolute w-full p-4 rounded-lg cursor-move select-none \${className}
+      \`}
+      style={{ top, bottom }}
+      draggable
+      onDragStart={handleDragStart}
+    >
+      {title}
+      <br />
+      <small>
+        {format(start, 'EEEEEE HH:mm')}
+        &nbsp;-&nbsp;
+        {format(end, 'EEEEEE HH:mm')}
+      </small>
+    </div>
+  )
+}
+  `}
+  language="tsx"
+/>
+
+Now, the library is firing `onEventChange` multiple times as you move an event. Use a handler to update the state:
+
+<Source
+  code={`
+const [events, setEvents] = useState(initialEvents)
+
+const handleEventChange = useCallback((event: MyEventProps) => {
+  setEvents(curr => curr.map(e => e.id === event.id ? event : e))
+}, [])
+
+return (
+  <Agenda
+    startDate={startDate}
+    onStartDateChange={setStartDate}
+    events={events}
+    onEventChange={handleEventChange}
+  >
+  ...
+  `}
+  language="tsx"
+/>
+
+That's it! Now you can drag your events around.
+
+You'll probably want to save these new events in your database. While the user waits, your events should have `pointer-events: none` to avoid inconsistencies.
+Doing such logic is (fortunately) outside the scope of this library.

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
 import Agenda, { Columns, Day, Ticks, useResize } from '../src'
-import { addDays, format, startOfWeek } from 'date-fns'
+import { addDays, format, startOfWeek, subDays } from 'date-fns'
 import { useCallback, useState } from 'react'
 import { BaseAgendaEvent } from '../src/context'
 import { ExtendedEventProps } from '../src/types'
@@ -75,7 +75,7 @@ const events: MyEventProps[] = [
 export const EventProps: Story = {
   render: () => {
 
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()))
+    const [startDate, setStartDate] = useState(subDays(new Date(), 1))
     const [events2, setEvents] = useState(events)
 
     const handleEventChange = useCallback((event: MyEventProps) => {
@@ -88,13 +88,14 @@ export const EventProps: Story = {
         onStartDateChange={setStartDate}
         events={events2}
         onEventChange={handleEventChange}
+        days={5}
       >
         {() => (
           <>
             <div
               className="grid gap-4 h-[700px] select-none"
               style={{
-                gridTemplateColumns: '60px repeat(7, 1fr)',
+                gridTemplateColumns: '60px repeat(5, 1fr)',
                 gridTemplateRows: 'min-content 1fr'
               }}
             >
@@ -158,7 +159,7 @@ export const EventProps: Story = {
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
-                    className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
+                    className="col-start-2 col-span-5 row-start-2 row-end-2 -z-10 relative"
                     ref={containerRef}
                   >
                     {ticks.map(({ hour, top }) => (
