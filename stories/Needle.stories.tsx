@@ -57,7 +57,7 @@ export const Basic: Story = {
                   {({ containerRef }) => (
                     <div
                       ref={containerRef}
-                      className="relative h-full row-start-2 col-start-2"
+                      className="relative h-full row-start-2"
                     >
                       <Needle>
                         {({ top }) => (
@@ -120,29 +120,13 @@ export const Elegant: Story = {
                 </div>
               )}
             </Ticks>
-            <Ticks>
-              {({ containerRef, ticks }) => (
-                <div
-                  className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
-                  ref={containerRef}
-                >
-                  {ticks.map(({ hour, top }) => (
-                    <div
-                      key={hour}
-                      className="opacity-30 h-0.5 bg-slate-200 absolute right-0 -left-3"
-                      style={{ top }}
-                    />
-                  ))}
-                </div>
-              )}
-            </Ticks>
             <Columns>
               {({ date, key }) => (
                 <Day key={key} date={date} >
                   {({ containerRef }) => (
                     <div
                       ref={containerRef}
-                      className="relative h-full row-start-2 col-start-2"
+                      className="relative h-full row-start-2"
                     >
                       <Needle>
                         {({ top }) => (
@@ -205,29 +189,13 @@ export const WithInteraction: Story = {
                 </div>
               )}
             </Ticks>
-            <Ticks>
-              {({ containerRef, ticks }) => (
-                <div
-                  className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
-                  ref={containerRef}
-                >
-                  {ticks.map(({ hour, top }) => (
-                    <div
-                      key={hour}
-                      className="opacity-30 h-0.5 bg-slate-200 absolute right-0 -left-3"
-                      style={{ top }}
-                    />
-                  ))}
-                </div>
-              )}
-            </Ticks>
             <Columns>
               {({ date, key }) => (
                 <Day key={key} date={date} >
                   {({ containerRef }) => (
                     <div
                       ref={containerRef}
-                      className="relative h-full row-start-2 col-start-2"
+                      className="relative h-full row-start-2"
                     >
                       <Needle>
                         {({ top }) => (

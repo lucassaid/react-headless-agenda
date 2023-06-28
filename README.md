@@ -4,9 +4,9 @@
   width="100"
 />
 # Headless agenda for react
-Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look confusing at first but I really think you'll like it.
+Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look intimidating at first but I'm sure you'll like it.
 
-This library makes it easy to display events in their respective columns or "days", with the corresponding heights based on their durations. It's not meant to be used as a "calendar" or a "month" view.
+This library makes it easy to display events in their respective columns (or "days"), with their corresponding position and height, based on their durations. It's not meant to be used as a "calendar" or a "month" view.
 
 ✅ Flexible
 
@@ -17,6 +17,8 @@ This library makes it easy to display events in their respective columns or "day
 ✅ Unestyled but easy to style
 
 ✅ Uses the default `Date` object only
+
+✅ Supports drag and resize for events
 
 <br>
 
