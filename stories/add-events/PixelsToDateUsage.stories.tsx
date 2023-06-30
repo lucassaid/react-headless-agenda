@@ -15,7 +15,7 @@ export const PixelsToDateUsage: Story = {
   render: () => {
 
     const handleClick = (e: MouseEvent<HTMLElement>, date: Date) => {
-      alert(`User clicked at: ${mouseEventToDate(e, date).toString()}`)
+      alert(`Clicked at: ${mouseEventToDate(e, date).toLocaleTimeString()}`)
     }
 
     return (

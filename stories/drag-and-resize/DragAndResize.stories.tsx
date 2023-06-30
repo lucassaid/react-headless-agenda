@@ -31,7 +31,6 @@ const Event = (
 
   return (
     <div
-      id={id}
       key={id}
       tabIndex={-1}
       className={`

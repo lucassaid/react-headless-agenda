@@ -4,7 +4,7 @@
 
 @layer base {
   button {
-    @apply border rounded px-2 py-1
+    @apply border rounded px-2 py-1 transition-all hover:border-slate-400;
   }
 }
 

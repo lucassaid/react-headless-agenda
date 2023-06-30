@@ -9,7 +9,7 @@ import { DrawEvents } from './DrawEvents.stories';
 
 # Allow users to add events
 
-Use the `mouseEventToDate` function to get the date from a mouse event:
+The library provides a `mouseEventToDate` function to get the date from a mouse event. You'll use this function to update your state and add events based on the cursor position.
 
 
 ### Click anywhere:
@@ -20,7 +20,7 @@ Use the `mouseEventToDate` function to get the date from a mouse event:
 const [events, setEvents] = useState<MyEvent[]>([])
 
 const handleClick = (e: MouseEvent<HTMLElement>, date: Date) => {
-  alert(\`User clicked at: \${mouseEventToDate(e, date).toString()}\`)
+  alert(\`clicked at: \${mouseEventToDate(e, date).toLocaleTimeString()}\`)
 }
 
 return (
@@ -71,7 +71,7 @@ const handleClick = (e: MouseEvent<HTMLElement>, date: Date) => {
 
 ### More examples
 
-#### Displaying a ghost event while hovering:
+#### Displaying a ghost event while hovering (click to add event):
 <Canvas of={WithGhost} />
 [See code]()
 

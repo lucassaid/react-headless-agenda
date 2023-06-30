@@ -37,11 +37,12 @@ export const hideDragGhost = (e: React.DragEvent<HTMLElement>) => {
 
 export const useDragEvent = (eventId: string, roundMinutes = 15) => {
 
-  const { events, onDragStart } = useContext(agendaContext)
+  const { events, onDragStart, setDraggingId } = useContext(agendaContext)
   const { columnHeight, date, topRef } = useContext(dayContext)
 
   const handleDragStart = useCallback((e: React.DragEvent<HTMLElement>) => {
     hideDragGhost(e)
+    setDraggingId(eventId)
 
     e.dataTransfer.effectAllowed = 'move'
 
@@ -55,7 +56,7 @@ export const useDragEvent = (eventId: string, roundMinutes = 15) => {
     const offsetMinutes = differenceInMinutes(mouseDate, event.start)
 
     e.dataTransfer.setData(`${eventId};${offsetMinutes};${roundMinutes}`, '')
-  }, [columnHeight, date, events, eventId, roundMinutes, topRef])
+  }, [columnHeight, date, events, eventId, roundMinutes, topRef, onDragStart, setDraggingId])
 
   return {
     handleDragStart,

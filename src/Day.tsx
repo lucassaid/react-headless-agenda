@@ -41,6 +41,7 @@ export interface EventBlock<EventType extends BaseAgendaEvent = BaseAgendaEvent>
   bottom: number
   startsBeforeToday: boolean
   endsAfterToday: boolean
+  isDragging: boolean
 }
 
 export interface DayChildrenProps {
@@ -55,7 +56,7 @@ interface DayProps {
 
 export default function Day({ date, children }: DayProps) {
 
-  const { events: allEvents, onEventChange, onDrop } = useContext(agendaContext)
+  const { events: allEvents, onEventChange, onDrop, draggingId, setDraggingId } = useContext(agendaContext)
   const columnContainerRef = useRef<HTMLDivElement | null>(null)
   const [columnHeight, setColumnHeight] = useState(0)
   const topRef = useRef(0)
@@ -80,8 +81,6 @@ export default function Day({ date, children }: DayProps) {
       ...event,
       start: newStart,
       end: newEnd,
-      startsBeforeToday: !isSameDay(newStart, date),
-      endsAfterToday: !isSameDay(newEnd, date),
     })
   }, [columnHeight, allEvents, date, onEventChange])
 
@@ -95,7 +94,8 @@ export default function Day({ date, children }: DayProps) {
 
   const handleDrop = useCallback((e: DragEvent) => {
     onDrop()
-  }, [onDrop])
+    setDraggingId('')
+  }, [onDrop, setDraggingId])
 
   useEffect(() => {
     const node = columnContainerRef.current
@@ -132,9 +132,10 @@ export default function Day({ date, children }: DayProps) {
         bottom,
         startsBeforeToday: !isSameDay(event.start, date),
         endsAfterToday: !isSameDay(event.end, date),
+        isDragging: event.id === draggingId,
       }
     })
-  }, [allEvents, date, columnHeight])
+  }, [allEvents, date, columnHeight, draggingId])
 
   return (
     <dayContext.Provider value={{ columnHeight, date, topRef, columnContainerRef }}>

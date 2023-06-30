@@ -1,5 +1,5 @@
 import { addDays, subDays, startOfWeek } from 'date-fns'
-import { ReactNode, useRef } from 'react'
+import { ReactNode, useState } from 'react'
 import agendaContext, { AgendaContext, BaseAgendaEvent } from './context'
 
 export interface AgendaChildrenProps {
@@ -30,6 +30,8 @@ export default function Agenda<TEvent extends BaseAgendaEvent>({
   onDrop = () => { },
 }: AgendaProps<TEvent>) {
 
+  const [draggingId, setDraggingId] = useState<string>('')
+
   const contextValue: AgendaContext<TEvent> = {
     startDate,
     onStartDateChange,
@@ -38,6 +40,8 @@ export default function Agenda<TEvent extends BaseAgendaEvent>({
     days,
     onDragStart,
     onDrop,
+    draggingId,
+    setDraggingId,
   }
 
   const endDate = addDays(new Date(startDate), days - 1)

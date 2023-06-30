@@ -133,7 +133,7 @@ export const EventProps: Story = {
                     className="relative h-full row-start-2"
                     style={{ gridColumnStart: Number(key) + 2 }}
                   >
-                    {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
+                    {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday, isDragging }) => {
                       const myEvent = event as MyEventProps
                       return (
                         <Event
@@ -144,6 +144,7 @@ export const EventProps: Story = {
                           onChange={handleEventChange}
                           startsBeforeToday={startsBeforeToday}
                           endsAfterToday={endsAfterToday}
+                          isDragging={isDragging}
                         />
                       )
                     })}

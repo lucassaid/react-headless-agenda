@@ -11,4 +11,5 @@ export interface ExtendedEventProps {
   bottom: number
   startsBeforeToday: boolean
   endsAfterToday: boolean
+  isDragging: boolean
 }

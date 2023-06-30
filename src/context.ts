@@ -1,4 +1,4 @@
-import { createContext, useContext, MutableRefObject } from 'react'
+import { createContext } from 'react'
 
 export interface BaseAgendaEvent {
   start: Date
@@ -14,6 +14,8 @@ export interface AgendaContext<EventType extends BaseAgendaEvent> {
   days: number
   onDragStart: (eventId: string) => void
   onDrop: () => void
+  draggingId: string
+  setDraggingId: (id: string) => void
 }
 
 const agendaContext = createContext<AgendaContext<BaseAgendaEvent>>({
@@ -24,6 +26,8 @@ const agendaContext = createContext<AgendaContext<BaseAgendaEvent>>({
   onEventChange: () => [],
   onDragStart: () => [],
   onDrop: () => [],
+  draggingId: '',
+  setDraggingId: () => [],
 })
 
 export default agendaContext
