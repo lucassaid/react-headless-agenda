@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, dateToPixels, mouseEventToDate } from '../src'
-import { addDays, addHours, format, roundToNearestMinutes, setHours, startOfHour, startOfWeek, subDays, subHours } from 'date-fns'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Needle } from '../src'
-import { BaseAgendaEvent } from '../src/context'
-import { AgendaChildrenProps, AgendaProps } from '../src/Agenda'
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
+import Agenda, { Days, Ticks } from '../../src'
+import { addDays, format, setHours, startOfWeek, subDays } from 'date-fns'
+import { useState } from 'react'
+import { Needle } from '../../src'
+import { BaseAgendaEvent } from '../../src/context'
+import { AgendaChildrenProps } from '../../src/Agenda'
 
 const meta: Meta<typeof Agenda> = {
   title: 'Examples/Navigation',
@@ -155,13 +154,13 @@ export const Navigation: Story = {
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
             </div>
             <br />
             <div
@@ -189,33 +188,30 @@ export const Navigation: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day key={key} date={date} >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full"
-                      >
-                        {events.map(({ event, top, bottom }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
-                          )
-                        })}
-                        <Needle>
-                          {({ top }) => (
-                            <div
-                              className="absolute h-1 bg-red-400 z-40 w-full"
-                              style={{ top }}
-                            />
-                          )}
-                        </Needle>
-                      </div>
-                    )}
-                  </Day>
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
+                    key={key}
+                    ref={containerRef}
+                    className="relative h-full"
+                  >
+                    {events.map(({ event, top, bottom }) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
+                      )
+                    })}
+                    <Needle>
+                      {({ top }) => (
+                        <div
+                          className="absolute h-1 bg-red-400 z-40 w-full"
+                          style={{ top }}
+                        />
+                      )}
+                    </Needle>
+                  </div>
                 )}
-              </Columns>
+              </Days>
             </div>
           </>
         )}

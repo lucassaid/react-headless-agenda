@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, useResize } from '../src'
-import { format, startOfWeek, subDays } from 'date-fns'
+import Agenda, { Days, Ticks, useResize } from '../../src'
+import { format, subDays } from 'date-fns'
 import { useCallback, useState } from 'react'
-import { BaseAgendaEvent } from '../src/context'
-import { ExtendedEventProps } from '../src/types'
+import { BaseAgendaEvent } from '../../src/context'
+import { ExtendedEventProps } from '../../src/types'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Drag And  Resize/ResizeOnly',
+  title: 'Interaction/drag-and-resize/ResizeInvisibleHandle',
   component: Agenda,
 }
 
@@ -47,13 +47,11 @@ const Event = (
       </small>
 
       <div
-        className="absolute bottom-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
+        className="absolute bottom-0 h-2 inset-x-0 cursor-ns-resize"
         draggable
         onDragStart={handleDragStart}
         onDrag={handleDrag}
-      >
-        Drag me!
-      </div>
+      />
     </div>
   )
 }
@@ -61,14 +59,14 @@ const Event = (
 const events: MyEventProps[] = [
   {
     id: '0',
-    title: 'Event 1',
+    title: 'I can be resized!',
     start: new Date(new Date().setHours(4, 0, 0, 0)),
     end: new Date(new Date().setHours(8, 0, 0, 0)),
     className: 'bg-lime-500 text-white',
   },
 ]
 
-export const ResizeOnly: Story = {
+export const ResizeInvisibleHandle: Story = {
   render: () => {
 
     const [startDate, setStartDate] = useState(subDays(new Date(), 1))
@@ -96,13 +94,13 @@ export const ResizeOnly: Story = {
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
@@ -121,37 +119,31 @@ export const ResizeOnly: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
                     key={key}
-                    date={date}
+                    ref={containerRef}
+                    className="relative h-full row-start-2"
+                    style={{ gridColumnStart: Number(key) + 2 }}
                   >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full row-start-2"
-                        style={{ gridColumnStart: Number(key) + 2 }}
-                      >
-                        {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event
-                              key={myEvent.id}
-                              {...myEvent}
-                              top={top}
-                              bottom={bottom}
-                              onChange={handleEventChange}
-                              startsBeforeToday={startsBeforeToday}
-                              endsAfterToday={endsAfterToday}
-                            />
-                          )
-                        })}
-                      </div>
-                    )}
-                  </Day>
+                    {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event
+                          key={myEvent.id}
+                          {...myEvent}
+                          top={top}
+                          bottom={bottom}
+                          onChange={handleEventChange}
+                          startsBeforeToday={startsBeforeToday}
+                          endsAfterToday={endsAfterToday}
+                        />
+                      )
+                    })}
+                  </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div

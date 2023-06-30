@@ -1,0 +1,88 @@
+import { Canvas, Meta, Source } from '@storybook/blocks';
+import { PixelsToDateUsage } from './PixelsToDateUsage.stories';
+import { AddOnClick } from './AddOnClick.stories';
+import { WithGhost } from './WithGhost.stories';
+import { SetStartAndEnd } from './SetStartAndEnd.stories';
+import { DrawEvents } from './DrawEvents.stories';
+
+<Meta title="Interaction/add-events/Add Events" />
+
+# Allow users to add events
+
+Use the `mouseEventToDate` function to get the date from a mouse event:
+
+
+### Click anywhere:
+<Canvas of={PixelsToDateUsage} />
+
+<Source
+  code={`
+const [events, setEvents] = useState<MyEvent[]>([])
+
+const handleClick = (e: MouseEvent<HTMLElement>, date: Date) => {
+  alert(\`User clicked at: \${mouseEventToDate(e, date).toString()}\`)
+}
+
+return (
+  <Agenda startDate={new Date()} events={[]} days={1} >
+    {() => (
+      <div className="grid h-[700px] grid-cols-1" >
+        <Days>
+          {({ date, key, containerRef }) => (
+            <div
+              key={key}
+              ref={containerRef}
+              className="relative h-full row-start-1 col-start-1 cursor-pointer z-10"
+              onClick={e => handleClick(e, date)}
+            />
+          )}
+        </Days>
+  ...
+  `}
+  language="tsx"
+/>
+
+### Update state on click
+
+Simply add your event with the date you got from the mouse event:
+
+<Canvas of={AddOnClick} />
+
+<Source
+  code={`
+const [events, setEvents] = useState<MyEvent[]>([])
+
+const handleClick = (e: MouseEvent<HTMLElement>, date: Date) => {
+  const clickedDate = mouseEventToDate(e, date)
+  setEvents(prev => [
+    ...prev,
+    {
+      id: (prev.length + 1).toString(),
+      title: \`New Event \${(prev.length + 1).toString()}\`,
+      start: clickedDate,
+      end: addHours(clickedDate, 3),
+      className: 'bg-blue-500 text-white',
+    }
+  ])
+}
+  `}
+  language="tsx"
+/>
+
+### More examples
+
+#### Displaying a ghost event while hovering:
+<Canvas of={WithGhost} />
+[See code]()
+
+---
+
+#### Click once to set start, click again to set end:
+<Canvas of={SetStartAndEnd} />
+[See code]()
+
+---
+
+#### Hold click and move to "draw" the events:
+<Canvas of={DrawEvents} />
+[See code]()

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, dateToPixels } from '../src'
+import Agenda, { Days, Day, Ticks, dateToPixels } from '../../src'
 import { format, startOfWeek, subHours, subMinutes } from 'date-fns'
 import { useCallback } from 'react'
-import { Needle } from '../src'
-import { BaseAgendaEvent } from '../src/context'
+import { Needle } from '../../src'
+import { BaseAgendaEvent } from '../../src/context'
 
 const meta: Meta<typeof Agenda> = {
   title: 'Examples/Scroll',
@@ -82,13 +82,13 @@ export const Scroll: Story = {
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
             </div>
             <hr className="mt-4" />
             <div
@@ -114,33 +114,30 @@ export const Scroll: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day key={key} date={date} >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full"
-                      >
-                        {events.map(({ event, top, bottom }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
-                          )
-                        })}
-                        <Needle>
-                          {({ top }) => (
-                            <div
-                              className="absolute h-1 bg-red-400 z-40 w-full"
-                              style={{ top }}
-                            />
-                          )}
-                        </Needle>
-                      </div>
-                    )}
-                  </Day>
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
+                    key={key}
+                    ref={containerRef}
+                    className="relative h-full"
+                  >
+                    {events.map(({ event, top, bottom }) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
+                      )
+                    })}
+                    <Needle>
+                      {({ top }) => (
+                        <div
+                          className="absolute h-1 bg-red-400 z-40 w-full"
+                          style={{ top }}
+                        />
+                      )}
+                    </Needle>
+                  </div>
                 )}
-              </Columns>
+              </Days>
             </div>
           </>
         )}

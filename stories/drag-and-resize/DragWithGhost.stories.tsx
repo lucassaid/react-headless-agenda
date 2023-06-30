@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, useResize } from '../src'
-import { format, startOfWeek, subDays } from 'date-fns'
+import Agenda, { Days, Ticks } from '../../src'
+import { format, startOfWeek } from 'date-fns'
 import { useCallback, useState } from 'react'
-import { BaseAgendaEvent } from '../src/context'
-import { ExtendedEventProps } from '../src/types'
+import { BaseAgendaEvent } from '../../src/context'
+import { useDragEvent } from '../../src/utils'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Drag And  Resize/ResizeInvisibleHandle',
+  title: 'Interaction/drag-and-resize/DragWithGhost',
   component: Agenda,
 }
 
@@ -22,11 +22,16 @@ interface MyEventProps extends BaseAgendaEvent {
   className?: string
 }
 
+interface ExtendedEventProps extends MyEventProps {
+  top: number
+  bottom: number
+}
+
 const Event = (
-  { id, title, top, bottom, className, start, end }: MyEventProps & ExtendedEventProps
+  { id, title, top, bottom, className, start, end }: ExtendedEventProps
 ) => {
 
-  const { handleDragStart, handleDrag } = useResize(id)
+  const { handleDragStart } = useDragEvent(id)
 
   return (
     <div
@@ -34,9 +39,11 @@ const Event = (
       key={id}
       tabIndex={-1}
       className={`
-        absolute w-full p-4 rounded-lg select-none ${className}
+        absolute w-full p-4 rounded-lg cursor-move select-none ${className}
       `}
       style={{ top, bottom }}
+      draggable
+      onDragStart={handleDragStart}
     >
       {title}
       <br />
@@ -45,13 +52,6 @@ const Event = (
         &nbsp;-&nbsp;
         {format(end, 'EEEEEE HH:mm')}
       </small>
-
-      <div
-        className="absolute bottom-0 h-2 inset-x-0 cursor-ns-resize"
-        draggable
-        onDragStart={handleDragStart}
-        onDrag={handleDrag}
-      />
     </div>
   )
 }
@@ -59,48 +59,66 @@ const Event = (
 const events: MyEventProps[] = [
   {
     id: '0',
-    title: 'I can be resized!',
-    start: new Date(new Date().setHours(4, 0, 0, 0)),
-    end: new Date(new Date().setHours(8, 0, 0, 0)),
-    className: 'bg-lime-500 text-white',
+    title: 'Event 1',
+    start: new Date(new Date().setHours(8, 0, 0, 0)),
+    end: new Date(new Date().setHours(16, 0, 0, 0)),
+    className: 'bg-lime-500 text-white z-10',
   },
 ]
 
-export const ResizeInvisibleHandle: Story = {
+export const DragWithGhost: Story = {
   render: () => {
 
-    const [startDate, setStartDate] = useState(subDays(new Date(), 1))
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()))
+    const [backupEvents, setBackupEvents] = useState<MyEventProps[]>([])
+
     const [events2, setEvents] = useState(events)
 
     const handleEventChange = useCallback((event: MyEventProps) => {
+      console.log(event)
       setEvents(curr => curr.map(e => e.id === event.id ? event : e))
     }, [])
+
+    const handleDragEventStart = (eventId: string) => {
+      const event = events2.find(e => e.id === eventId)
+      if (!event) return
+      setBackupEvents([{
+        ...event,
+        id: `${event.id}-backup`,
+        className: 'bg-lime-500 text-white opacity-50 z-0 pointer-events-none',
+      }])
+    }
+
+    const handleDrop = () => {
+      setBackupEvents([])
+    }
 
     return (
       <Agenda
         startDate={startDate}
         onStartDateChange={setStartDate}
-        events={events2}
+        events={[...events2, ...backupEvents]}
         onEventChange={handleEventChange}
-        days={5}
+        onDragStart={handleDragEventStart}
+        onDrop={handleDrop}
       >
         {() => (
           <>
             <div
               className="grid gap-4 h-screen select-none"
               style={{
-                gridTemplateColumns: '60px repeat(5, 1fr)',
+                gridTemplateColumns: '60px repeat(7, 1fr)',
                 gridTemplateRows: 'min-content 1fr'
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
@@ -119,41 +137,32 @@ export const ResizeInvisibleHandle: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
                     key={key}
-                    date={date}
+                    ref={containerRef}
+                    className="relative h-full row-start-2"
+                    style={{ gridColumnStart: Number(key) + 2 }}
                   >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full row-start-2"
-                        style={{ gridColumnStart: Number(key) + 2 }}
-                      >
-                        {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event
-                              key={myEvent.id}
-                              {...myEvent}
-                              top={top}
-                              bottom={bottom}
-                              onChange={handleEventChange}
-                              startsBeforeToday={startsBeforeToday}
-                              endsAfterToday={endsAfterToday}
-                            />
-                          )
-                        })}
-                      </div>
-                    )}
-                  </Day>
+                    {events.map(({ event, top, bottom }, index) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event
+                          key={myEvent.id}
+                          {...myEvent}
+                          top={top}
+                          bottom={bottom}
+                        />
+                      )
+                    })}
+                  </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
-                    className="col-start-2 col-span-5 row-start-2 row-end-2 -z-10 relative"
+                    className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
                     ref={containerRef}
                   >
                     {ticks.map(({ hour, top }) => (

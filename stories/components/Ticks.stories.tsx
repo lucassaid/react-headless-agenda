@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Ticks, dateToPixels } from '../src'
-import { useCallback } from 'react'
-import { setHours } from 'date-fns'
+import { Ticks } from '../../src'
 
 const meta: Meta<typeof Ticks> = {
   title: 'Components/Ticks',
@@ -11,7 +9,7 @@ const meta: Meta<typeof Ticks> = {
 export default meta
 type Story = StoryObj<typeof Ticks>
 
-export const ForHours: Story = {
+export const Hours: Story = {
   render: () => (
     <Ticks>
       {({ containerRef, ticks }) => (
@@ -34,7 +32,7 @@ export const ForHours: Story = {
   )
 }
 
-export const ForHorizontalLines: Story = {
+export const HorizontalLines: Story = {
   render: () => (
     <Ticks>
       {({ containerRef, ticks }) => (
@@ -46,6 +44,27 @@ export const ForHorizontalLines: Story = {
             <div
               key={hour}
               className="h-0.5 bg-slate-100 absolute w-full"
+              style={{ top }}
+            />
+          ))}
+        </div>
+      )}
+    </Ticks>
+  )
+}
+
+export const HorizontalDashedLines: Story = {
+  render: () => (
+    <Ticks>
+      {({ containerRef, ticks }) => (
+        <div
+          className="relative h-[700px]"
+          ref={containerRef}
+        >
+          {ticks.map(({ hour, top }) => (
+            <div
+              key={hour}
+              className="border-b border-dashed border-slate-300 absolute w-full"
               style={{ top }}
             />
           ))}

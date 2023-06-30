@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Ticks } from '../src'
+import Agenda, { Days, Ticks } from '../../src'
 import { format } from 'date-fns'
 
 const meta: Meta<typeof Agenda> = {
@@ -27,13 +27,13 @@ export const HorizontalLines: Story = {
             }}
           >
             <div />
-            <Columns>
+            <Days>
               {({ date, key }) => (
                 <div key={key} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
-            </Columns>
+            </Days>
             <Ticks>
               {({ containerRef, ticks }) => (
                 <div

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, useResize } from '../src'
-import { addDays, format, startOfWeek, subDays } from 'date-fns'
+import Agenda, { Days, Ticks, useResize } from '../../src'
+import { addDays, format, subDays } from 'date-fns'
 import { useCallback, useState } from 'react'
-import { BaseAgendaEvent } from '../src/context'
-import { ExtendedEventProps } from '../src/types'
+import { BaseAgendaEvent } from '../../src/context'
+import { ExtendedEventProps } from '../../src/types'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Drag And Resize/EventProps',
+  title: 'Interaction/drag-and-resize/EventProps',
   component: Agenda,
 }
 
@@ -100,13 +100,13 @@ export const EventProps: Story = {
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
@@ -125,37 +125,31 @@ export const EventProps: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
                     key={key}
-                    date={date}
+                    ref={containerRef}
+                    className="relative h-full row-start-2"
+                    style={{ gridColumnStart: Number(key) + 2 }}
                   >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full row-start-2"
-                        style={{ gridColumnStart: Number(key) + 2 }}
-                      >
-                        {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event
-                              key={myEvent.id}
-                              {...myEvent}
-                              top={top}
-                              bottom={bottom}
-                              onChange={handleEventChange}
-                              startsBeforeToday={startsBeforeToday}
-                              endsAfterToday={endsAfterToday}
-                            />
-                          )
-                        })}
-                      </div>
-                    )}
-                  </Day>
+                    {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event
+                          key={myEvent.id}
+                          {...myEvent}
+                          top={top}
+                          bottom={bottom}
+                          onChange={handleEventChange}
+                          startsBeforeToday={startsBeforeToday}
+                          endsAfterToday={endsAfterToday}
+                        />
+                      )
+                    })}
+                  </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div

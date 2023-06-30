@@ -1,0 +1,60 @@
+import { Canvas, Meta, Source } from '@storybook/blocks';
+import * as DaysStories from './Days.stories';
+
+<Meta of={DaysStories} />
+
+# Days
+
+`<Days>` lets you render a markup for each day.
+
+For the header, you could use something like this:
+
+<Canvas of={DaysStories.AgendaHeader} />
+
+<Source
+  code={`
+<div className="flex max-w-lg">
+  <Days>
+    {({ date, key }) => (
+      <div key={key} className="flex-1 center">
+        {format(date, 'ccc d')}
+      </div>
+    )}
+  </Days>
+</div>
+  `}
+  language="tsx"
+/>
+
+### Rendering events
+
+Use the provided `events` to render the events for each day
+
+<Canvas of={DaysStories.RenderingEvents} />
+
+<Source
+  code={`
+<div className="flex gap-x-4">
+  <Days>
+    {({ key, containerRef, events }) => (
+      <div
+        key={key}
+        ref={containerRef}
+        className="relative flex-1"
+      >
+        {events.map(({ event, top, bottom }) => (
+          <div
+            key={event.title}
+            className="absolute"
+            style={{ top, bottom }}
+          >
+            {event.title}
+          </div>
+        ))}
+      </div>
+    )}
+  </Days>
+</div>
+  `}
+  language="tsx"
+/>

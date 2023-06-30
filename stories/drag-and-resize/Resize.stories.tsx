@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day, Ticks, useResize } from '../src'
-import { addDays, addHours, format, setHours, startOfWeek, subHours } from 'date-fns'
+import Agenda, { Days, Day, Ticks, useResize } from '../../src'
+import { format, subDays } from 'date-fns'
 import { useCallback, useState } from 'react'
-import { Needle } from '../src'
-import { BaseAgendaEvent } from '../src/context'
-import { useDragEvent } from '../src/utils'
+import { BaseAgendaEvent } from '../../src/context'
+import { ExtendedEventProps } from '../../src/types'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Drag And Resize/DragAndResize',
+  title: 'Interaction/drag-and-resize/ResizeOnly',
   component: Agenda,
 }
 
@@ -24,11 +23,10 @@ interface MyEventProps extends BaseAgendaEvent {
 }
 
 const Event = (
-  { id, title, top, bottom, className, start, end }: MyEventProps & { top: number, bottom: number }
+  { id, title, top, bottom, className, start, end }: MyEventProps & ExtendedEventProps
 ) => {
 
   const { handleDragStart, handleDrag } = useResize(id)
-  const { handleDragStart: handle2 } = useDragEvent(id)
 
   return (
     <div
@@ -39,8 +37,6 @@ const Event = (
         absolute w-full p-4 rounded-lg select-none ${className}
       `}
       style={{ top, bottom }}
-      draggable
-      onDragStart={handle2}
     >
       {title}
       <br />
@@ -51,11 +47,13 @@ const Event = (
       </small>
 
       <div
-        className="absolute bottom-2 h-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
+        className="absolute bottom-2 bg-red-500 inset-x-2 left-2 rounded-md text-center text-xs cursor-ns-resize"
         draggable
         onDragStart={handleDragStart}
         onDrag={handleDrag}
-      />
+      >
+        Drag me!
+      </div>
     </div>
   )
 }
@@ -70,11 +68,10 @@ const events: MyEventProps[] = [
   },
 ]
 
-export const DragAndResize: Story = {
+export const ResizeOnly: Story = {
   render: () => {
 
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()))
-
+    const [startDate, setStartDate] = useState(subDays(new Date(), 1))
     const [events2, setEvents] = useState(events)
 
     const handleEventChange = useCallback((event: MyEventProps) => {
@@ -87,24 +84,25 @@ export const DragAndResize: Story = {
         onStartDateChange={setStartDate}
         events={events2}
         onEventChange={handleEventChange}
+        days={5}
       >
         {() => (
           <>
             <div
               className="grid gap-4 h-screen select-none"
               style={{
-                gridTemplateColumns: '60px repeat(7, 1fr)',
+                gridTemplateColumns: '60px repeat(5, 1fr)',
                 gridTemplateRows: 'min-content 1fr'
               }}
             >
               <div />
-              <Columns>
+              <Days>
                 {({ date, key }) => (
                   <div key={key} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
@@ -123,39 +121,35 @@ export const DragAndResize: Story = {
                   </div>
                 )}
               </Ticks>
-              <Columns>
-                {({ date, key }) => (
-                  <Day
+              <Days>
+                {({ key, containerRef, events }) => (
+                  <div
                     key={key}
-                    date={date}
+                    ref={containerRef}
+                    className="relative h-full row-start-2"
+                    style={{ gridColumnStart: Number(key) + 2 }}
                   >
-                    {({ containerRef, events }) => (
-                      <div
-                        ref={containerRef}
-                        className="relative h-full row-start-2"
-                        style={{ gridColumnStart: Number(key) + 2 }}
-                      >
-                        {events.map(({ event, top, bottom }) => {
-                          const myEvent = event as MyEventProps
-                          return (
-                            <Event
-                              key={myEvent.id}
-                              {...myEvent}
-                              top={top}
-                              bottom={bottom}
-                              onChange={handleEventChange}
-                            />
-                          )
-                        })}
-                      </div>
-                    )}
-                  </Day>
+                    {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
+                      const myEvent = event as MyEventProps
+                      return (
+                        <Event
+                          key={myEvent.id}
+                          {...myEvent}
+                          top={top}
+                          bottom={bottom}
+                          onChange={handleEventChange}
+                          startsBeforeToday={startsBeforeToday}
+                          endsAfterToday={endsAfterToday}
+                        />
+                      )
+                    })}
+                  </div>
                 )}
-              </Columns>
+              </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
-                    className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
+                    className="col-start-2 col-span-5 row-start-2 row-end-2 -z-10 relative"
                     ref={containerRef}
                   >
                     {ticks.map(({ hour, top }) => (

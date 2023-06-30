@@ -8,3 +8,4 @@ stories
 .storybook
 postcss.config.js
 tailwind.config.js
+storybook-static

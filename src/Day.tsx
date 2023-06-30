@@ -21,10 +21,18 @@ import {
 import agendaContext, { BaseAgendaEvent } from './context'
 import { dateToPixels, pixelsToDate } from './utils'
 
-export const dayContext = createContext({
+interface DayContext {
+  columnHeight: number
+  date: Date
+  topRef: React.MutableRefObject<number>
+  columnContainerRef: React.MutableRefObject<HTMLDivElement | null>
+}
+
+export const dayContext = createContext<DayContext>({
   columnHeight: 0,
   date: new Date(),
   topRef: { current: 0 },
+  columnContainerRef: { current: null },
 })
 
 export interface EventBlock<EventType extends BaseAgendaEvent = BaseAgendaEvent> {
@@ -35,7 +43,7 @@ export interface EventBlock<EventType extends BaseAgendaEvent = BaseAgendaEvent>
   endsAfterToday: boolean
 }
 
-interface DayChildrenProps {
+export interface DayChildrenProps {
   containerRef: (node: HTMLDivElement) => void
   events: EventBlock[]
 }
@@ -129,7 +137,7 @@ export default function Day({ date, children }: DayProps) {
   }, [allEvents, date, columnHeight])
 
   return (
-    <dayContext.Provider value={{ columnHeight, date, topRef }}>
+    <dayContext.Provider value={{ columnHeight, date, topRef, columnContainerRef }}>
       {children({ containerRef, events })}
     </dayContext.Provider>
   )

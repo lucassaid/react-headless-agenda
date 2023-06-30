@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Columns, Day } from '../src'
+import Agenda, { Day } from '../../src'
 import { format, setHours } from 'date-fns'
 
 const meta: Meta<typeof Day> = {
@@ -51,36 +51,4 @@ export const BasicDay: Story = {
   ),
 }
 
-export const DayInsideColumns: Story = {
-  render: () => (
-    <Agenda events={[event]} >
-      {() => (
-        <div className="flex p-4 border border-sky-500 rounded-md gap-x-3 pt-10 relative after:content-['Columns_container'] after:block after:absolute after:top-2 after:text-sky-400 after:text-sm">
-          <Columns>
-            {({ date, key }) => (
-              <Day date={date} key={key}>
-                {({ containerRef, events }) => (
-                  <div
-                    ref={containerRef}
-                    className="relative h-80 text-orange-400 border border-orange-400 rounded-md p-3 flex-1 text-sm"
-                  >
-                    Day container
-                    {events.map(({ event, top, bottom }) => (
-                      <div
-                        key={event.title}
-                        className="absolute inset-x-3 p-2 rounded-md border border-lime-500 text-lime-600"
-                        style={{ top, bottom }}
-                      >
-                        {event.title}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </Day>
-            )}
-          </Columns>
-        </div>
-      )}
-    </Agenda>
-  ),
-}
+

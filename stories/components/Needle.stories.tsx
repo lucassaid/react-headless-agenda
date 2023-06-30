@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Day, Ticks, Needle, Columns } from '../src'
+import Agenda, { Ticks, Needle, Days } from '../../src'
 import { format, startOfWeek } from 'date-fns'
 
 const meta: Meta<typeof Needle> = {
@@ -26,13 +26,13 @@ export const Basic: Story = {
             }}
           >
             <div />
-            <Columns>
+            <Days>
               {({ date, key }) => (
                 <div key={key} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
-            </Columns>
+            </Days>
             <Ticks>
               {({ containerRef, ticks }) => (
                 <div
@@ -51,27 +51,24 @@ export const Basic: Story = {
                 </div>
               )}
             </Ticks>
-            <Columns>
-              {({ date, key }) => (
-                <Day key={key} date={date} >
-                  {({ containerRef }) => (
-                    <div
-                      ref={containerRef}
-                      className="relative h-full row-start-2"
-                    >
-                      <Needle>
-                        {({ top }) => (
-                          <div
-                            className="absolute h-0.5 bg-red-400 w-full"
-                            style={{ top }}
-                          />
-                        )}
-                      </Needle>
-                    </div>
-                  )}
-                </Day>
+            <Days>
+              {({ key, containerRef }) => (
+                <div
+                  key={key}
+                  ref={containerRef}
+                  className="relative h-full row-start-2"
+                >
+                  <Needle>
+                    {({ top }) => (
+                      <div
+                        className="absolute h-0.5 bg-red-400 w-full"
+                        style={{ top }}
+                      />
+                    )}
+                  </Needle>
+                </div>
               )}
-            </Columns>
+            </Days>
           </div>
         </>
       )}
@@ -95,13 +92,13 @@ export const Elegant: Story = {
             }}
           >
             <div />
-            <Columns>
+            <Days>
               {({ date, key }) => (
                 <div key={key} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
-            </Columns>
+            </Days>
             <Ticks>
               {({ containerRef, ticks }) => (
                 <div
@@ -120,27 +117,24 @@ export const Elegant: Story = {
                 </div>
               )}
             </Ticks>
-            <Columns>
-              {({ date, key }) => (
-                <Day key={key} date={date} >
-                  {({ containerRef }) => (
-                    <div
-                      ref={containerRef}
-                      className="relative h-full row-start-2"
-                    >
-                      <Needle>
-                        {({ top }) => (
-                          <div
-                            className="needle"
-                            style={{ top }}
-                          />
-                        )}
-                      </Needle>
-                    </div>
-                  )}
-                </Day>
+            <Days>
+              {({ key, containerRef }) => (
+                <div
+                  key={key}
+                  ref={containerRef}
+                  className="relative h-full row-start-2"
+                >
+                  <Needle>
+                    {({ top }) => (
+                      <div
+                        className="needle"
+                        style={{ top }}
+                      />
+                    )}
+                  </Needle>
+                </div>
               )}
-            </Columns>
+            </Days>
           </div>
         </>
       )}
@@ -164,13 +158,13 @@ export const WithInteraction: Story = {
             }}
           >
             <div />
-            <Columns>
+            <Days>
               {({ date, key }) => (
                 <div key={key} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
-            </Columns>
+            </Days>
             <Ticks>
               {({ containerRef, ticks }) => (
                 <div
@@ -189,29 +183,26 @@ export const WithInteraction: Story = {
                 </div>
               )}
             </Ticks>
-            <Columns>
-              {({ date, key }) => (
-                <Day key={key} date={date} >
-                  {({ containerRef }) => (
-                    <div
-                      ref={containerRef}
-                      className="relative h-full row-start-2"
-                    >
-                      <Needle>
-                        {({ top }) => (
-                          <div
-                            className="rounded cursor-pointer absolute bg-blue-500 p-0.5 w-full h-2 transition-all hover:h-8 overflow-hidden text-white z-40 text-center"
-                            style={{ top }}
-                          >
-                            It{'\''}s {format(new Date(), 'HH:mm')}!! 🎉 &nbsp;&nbsp; (?)
-                          </div>
-                        )}
-                      </Needle>
-                    </div>
-                  )}
-                </Day>
+            <Days>
+              {({ key, containerRef }) => (
+                <div
+                  key={key}
+                  ref={containerRef}
+                  className="relative h-full row-start-2"
+                >
+                  <Needle>
+                    {({ top }) => (
+                      <div
+                        className="rounded cursor-pointer absolute bg-blue-500 p-0.5 w-full h-2 transition-all hover:h-8 overflow-hidden text-white z-40 text-center"
+                        style={{ top }}
+                      >
+                        It{'\''}s {format(new Date(), 'HH:mm')}!! 🎉 &nbsp;&nbsp; (?)
+                      </div>
+                    )}
+                  </Needle>
+                </div>
               )}
-            </Columns>
+            </Days>
           </div>
         </>
       )}

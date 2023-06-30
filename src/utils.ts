@@ -18,6 +18,12 @@ export const pixelsToDate = (pixels: number, columnHeight: number, pivot = new D
   return date
 }
 
+/**
+ * 
+ * @param e A synthetic event
+ * @param pivotDate Reference date
+ * @returns a date
+ */
 export const mouseEventToDate = (e: React.MouseEvent<HTMLElement>, pivotDate = new Date()) => {
   const { top, height } = e.currentTarget.getBoundingClientRect()
   return pixelsToDate(e.clientY - top, height, pivotDate)
