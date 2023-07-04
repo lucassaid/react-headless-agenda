@@ -4,27 +4,37 @@
   width="100"
 />
 # Headless agenda for react
-Completely unstyled components that help you to make your own agenda. Give it a try! It is really simple to use, and allows fully customization (the markup is all yours!). It might look intimidating at first but I'm sure you'll like it.
+Completely unstyled components to build your own agenda. Give it a try! It's really simple to use, and allows fully customization (the markup is all yours!). It might look intimidating at first but I'm sure you'll like it.
 
 This library makes it easy to display events in their respective columns (or "days"), with their corresponding position and height, based on their durations. It's not meant to be used as a "calendar" or a "month" view.
 
-✅ Flexible
+🔧 Flexible
 
 ✅ Controlled
 
-✅ Performant
+🚀 Performant
 
-✅ Unestyled but easy to style
+💅🏻 Unstyled but easy to style
 
-✅ Uses the default `Date` object only
+⏰ Uses the default `Date` object only
 
-✅ Supports drag and resize for events
+↔️ Supports drag and resize for events
 
 <br>
 
-How it looks with some styling:
+## [📖 All examples and documentation here!](https://react-headless-agenda.vercel.app/)
 
-![day](./assets/complete_agenda.png)
+<br>
+
+## 🚧🚧 This repo is under heavy development 🚧🚧
+
+<br>
+
+Use your markup and custom logic to achieve virtually anything!
+
+![full-example](./assets/full-example.gif)
+
+A bit of [framer-motion](https://www.framer.com/motion/) was used to make the navigation look smooth - [See code](https://github.com/lucassaid/react-headless-agenda/blob/main/stories/full-examples/LimitIsTheSky.stories.tsx)
 
 <br>
 
