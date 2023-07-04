@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns'
 import { createContext } from 'react'
 
 export interface BaseAgendaEvent {
@@ -8,6 +9,7 @@ export interface BaseAgendaEvent {
 
 export interface AgendaContext<EventType extends BaseAgendaEvent> {
   startDate: Date
+  endDate: Date
   onStartDateChange: (newDate: Date) => void
   events: EventType[]
   onEventChange: (newEvent: EventType) => void
@@ -20,6 +22,7 @@ export interface AgendaContext<EventType extends BaseAgendaEvent> {
 
 const agendaContext = createContext<AgendaContext<BaseAgendaEvent>>({
   startDate: new Date(),
+  endDate: addDays(new Date(), 6),
   onStartDateChange: () => [],
   events: [],
   days: 7,

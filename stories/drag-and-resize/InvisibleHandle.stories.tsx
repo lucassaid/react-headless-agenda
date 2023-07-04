@@ -95,8 +95,8 @@ export const ResizeInvisibleHandle: Story = {
             >
               <div />
               <Days>
-                {({ date, key }) => (
-                  <div key={key} className="text-center">
+                {({ date }) => (
+                  <div key={date.toString()} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
@@ -120,12 +120,12 @@ export const ResizeInvisibleHandle: Story = {
                 )}
               </Ticks>
               <Days>
-                {({ key, containerRef, events }) => (
+                {({ date, containerRef, events, index }) => (
                   <div
-                    key={key}
+                    key={date.toString()}
                     ref={containerRef}
                     className="relative h-full row-start-2"
-                    style={{ gridColumnStart: Number(key) + 2 }}
+                    style={{ gridColumnStart: index + 2 }}
                   >
                     {events.map(({ event, top, bottom, startsBeforeToday, endsAfterToday }) => {
                       const myEvent = event as MyEventProps
@@ -138,6 +138,7 @@ export const ResizeInvisibleHandle: Story = {
                           onChange={handleEventChange}
                           startsBeforeToday={startsBeforeToday}
                           endsAfterToday={endsAfterToday}
+                          isDragging={false}
                         />
                       )
                     })}

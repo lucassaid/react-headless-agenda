@@ -4,8 +4,8 @@ import context from './context'
 import Day, { DayChildrenProps } from './Day'
 
 export interface WeekDayProps extends DayChildrenProps {
-  key: string,
   date: Date,
+  index: number,
 }
 
 export interface WeekProps {
@@ -22,14 +22,14 @@ export default function Days({ children }: WeekProps) {
       {daysOfWeek.map((i: number) => {
         const date = addDays(startDate, i)
         return (
-          <Day key={i.toString()} date={date}>
+          <Day key={date.toString()} date={date}>
             {({ containerRef, events }) => (
               <>
                 {children({
                   date,
-                  key: i.toString(),
                   containerRef,
                   events,
+                  index: i,
                 })}
               </>
             )}

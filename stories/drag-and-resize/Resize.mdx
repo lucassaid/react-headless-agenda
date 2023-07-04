@@ -96,7 +96,7 @@ While you resize an event, `onEventChange` will fire, so you can handle it exact
 
 # Advanced props
 
-The events you get from `<Day>` have some extra props that you can use to customize the dragging and resizing behavior, and the styling.
+The events you get from `<Days>` have some extra props that you can use to customize behavior and styling.
 
 ### `startsBeforeToday` and `endsAfterToday`
 
@@ -111,7 +111,21 @@ Here I use these to:
 <Source
   code={`
 const Event = (
-  { id, title, top, bottom, className, start, end, startsBeforeToday, endsAfterToday }
+  {
+    // your props
+    id,
+    title,
+    top,
+    bottom,
+    className,
+    start,
+    end,
+
+    // props provided by <Days>
+    startsBeforeToday,
+    endsAfterToday,
+    isDragging
+  }
 ) => {
 
   const { handleDragStart, handleDrag } = useResize(id)
@@ -125,6 +139,7 @@ const Event = (
         absolute w-full p-4 rounded-lg select-none \${className}
         \${startsBeforeToday ? 'rounded-t-none' : ''}
         \${endsAfterToday ? 'rounded-b-none' : ''}
+        \${isDragging ? 'ring' : ''}
       \`}
       style={{ top, bottom }}
     >
@@ -152,3 +167,5 @@ const Event = (
   `}
   language="tsx"
 />
+
+[See full code]()

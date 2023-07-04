@@ -10,6 +10,6 @@
 
 @layer components {
   .needle {
-    @apply absolute h-0.5 bg-red-400 z-40 w-full before:content-[''] before:block before:w-3 before:h-3 before:bg-red-400 before:absolute before:rounded-full before:-top-[5px] before:-left-2 before:z-40;
+    @apply absolute h-0.5 bg-red-400 z-50 w-full before:content-[''] before:block before:w-3 before:h-3 before:bg-red-400 before:absolute before:rounded-full before:-top-[5px] before:-left-2 before:z-50;
   }
 }

@@ -28,8 +28,8 @@ export const HorizontalLines: Story = {
           >
             <div />
             <Days>
-              {({ date, key }) => (
-                <div key={key} className="text-center">
+              {({ date }) => (
+                <div key={date.toString()} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}

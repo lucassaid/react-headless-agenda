@@ -16,8 +16,8 @@ export const AgendaHeader: Story = {
       {() => (
         <div className="flex max-w-lg">
           <Days>
-            {({ date, key }) => (
-              <div key={key} className="flex-1 center">
+            {({ date }) => (
+              <div key={date.toString()} className="flex-1 center">
                 {format(date, 'ccc d')}
               </div>
             )}
@@ -43,9 +43,9 @@ export const RenderingEvents: Story = {
         {() => (
           <div className="flex gap-x-3">
             <Days>
-              {({ key, containerRef, events }) => (
+              {({ date, containerRef, events }) => (
                 <div
-                  key={key}
+                  key={date.toString()}
                   ref={containerRef}
                   className="relative h-80 text-orange-400 border border-orange-400 rounded-md p-3 flex-1 text-sm"
                 >

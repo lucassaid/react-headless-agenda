@@ -72,8 +72,8 @@ export const Mobile: Story = {
       <Agenda events={events} >
         {() => (
           <Days>
-            {({ date, key, containerRef, events }) => (
-              <div key={key}>
+            {({ date, containerRef, events }) => (
+              <div key={date.toString()}>
                 <h4
                   className="mt-4 mb-2"
                   id={format(date, 'EEEE d')}

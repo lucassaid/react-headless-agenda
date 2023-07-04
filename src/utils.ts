@@ -29,10 +29,12 @@ export const mouseEventToDate = (e: React.MouseEvent<HTMLElement>, pivotDate = n
   return pixelsToDate(e.clientY - top, height, pivotDate)
 }
 
+const blankCanvas = document.createElement('canvas')
+blankCanvas.style.position = 'fixed'
+document.body.appendChild(blankCanvas)
+
 export const hideDragGhost = (e: React.DragEvent<HTMLElement>) => {
-  const blankCanvas = document.createElement('canvas')
   e.dataTransfer.setDragImage(blankCanvas, 0, 0)
-  document.body.appendChild(blankCanvas)
 }
 
 export const useDragEvent = (eventId: string, roundMinutes = 15) => {

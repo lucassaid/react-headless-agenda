@@ -125,8 +125,8 @@ export const SetStartAndEnd: Story = {
             >
               <div />
               <Days>
-                {({ date, key }) => (
-                  <div key={key} className="text-center">
+                {({ date }) => (
+                  <div key={date.toString()} className="text-center">
                     {format(date, 'ccc d')}
                   </div>
                 )}
@@ -150,15 +150,15 @@ export const SetStartAndEnd: Story = {
                 )}
               </Ticks>
               <Days>
-                {({ date, key, containerRef, events }) => (
+                {({ date, containerRef, events, index }) => (
                   <div
-                    key={key}
+                    key={date.toString()}
                     ref={containerRef}
                     className={`
                       relative h-full row-start-2 z-10
                       ${mode === 'adding' ? 'cursor-pointer' : 'cursor-ns-resize'}
                     `}
-                    style={{ gridColumnStart: Number(key) + 2 }}
+                    style={{ gridColumnStart: index + 2 }}
                     onMouseMove={e => handleMouseMove(e, date)}
                     onMouseLeave={() => setGhostEvent(null)}
                     onClick={e => handleClick(e, date)}

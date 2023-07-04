@@ -27,8 +27,8 @@ export const Basic: Story = {
           >
             <div />
             <Days>
-              {({ date, key }) => (
-                <div key={key} className="text-center">
+              {({ date }) => (
+                <div key={date.toString()} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
@@ -52,9 +52,9 @@ export const Basic: Story = {
               )}
             </Ticks>
             <Days>
-              {({ key, containerRef }) => (
+              {({ date, containerRef }) => (
                 <div
-                  key={key}
+                  key={date.toString()}
                   ref={containerRef}
                   className="relative h-full row-start-2"
                 >
@@ -93,8 +93,8 @@ export const Elegant: Story = {
           >
             <div />
             <Days>
-              {({ date, key }) => (
-                <div key={key} className="text-center">
+              {({ date }) => (
+                <div key={date.toString()} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
@@ -118,9 +118,9 @@ export const Elegant: Story = {
               )}
             </Ticks>
             <Days>
-              {({ key, containerRef }) => (
+              {({ date, containerRef }) => (
                 <div
-                  key={key}
+                  key={date.toString()}
                   ref={containerRef}
                   className="relative h-full row-start-2"
                 >
@@ -159,8 +159,8 @@ export const WithInteraction: Story = {
           >
             <div />
             <Days>
-              {({ date, key }) => (
-                <div key={key} className="text-center">
+              {({ date }) => (
+                <div key={date.toString()} className="text-center">
                   {format(date, 'ccc d')}
                 </div>
               )}
@@ -184,9 +184,9 @@ export const WithInteraction: Story = {
               )}
             </Ticks>
             <Days>
-              {({ key, containerRef }) => (
+              {({ date, containerRef }) => (
                 <div
-                  key={key}
+                  key={date.toString()}
                   ref={containerRef}
                   className="relative h-full row-start-2"
                 >

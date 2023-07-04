@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
 import Agenda, { Crosshair, Days, Ticks, useResize } from '../../src'
-import { addDays, addMinutes, format, setHours, startOfWeek, subDays } from 'date-fns'
+import { addDays, addMinutes, format, roundToNearestMinutes, setHours, startOfWeek, subDays } from 'date-fns'
 import { MouseEvent, useCallback, useRef, useState } from 'react'
 import { Needle } from '../../src'
 import { BaseAgendaEvent } from '../../src/context'
 import { AgendaChildrenProps } from '../../src/Agenda'
 import { mouseEventToDate, useDragEvent } from '../../src/utils'
-import { ArrowsOutCardinal, CaretLeft, CaretRight, Eye, PaintBrushBroad, X } from 'phosphor-react'
+import { ArrowsOutCardinal, CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight, Eye, PaintBrushBroad, X } from 'phosphor-react'
 import { ExtendedEventProps } from '../../src/types'
+import { motion } from 'framer-motion'
 
 type Mode = 'view' | 'move' | 'paint'
 
@@ -56,12 +57,12 @@ const Event = (
         ${className}
         ${{
           'view': 'opacity-90',
-          'move': 'shadow-lg',
+          'move': 'cursor-move shadow-lg',
           'paint': '',
         }[mode]}
         ${startsBeforeToday ? 'rounded-t-none' : ''}
         ${endsAfterToday ? 'rounded-b-none' : ''}
-        ${isDragging ? 'ring z-50' : mode === 'move' ? 'opacity-90' : ''}
+        ${isDragging ? 'ring z-40' : mode === 'move' ? 'opacity-90' : ''}
       `}
       style={{ top, bottom }}
       draggable={mode === 'move'}
@@ -119,8 +120,8 @@ const initialEvents: MyEventProps[] = [
   {
     id: '2',
     title: 'Event 3',
-    start: setHours(addDays(firstStart, 3), 17),
-    end: setHours(addDays(firstStart, 4), 4),
+    start: setHours(addDays(firstStart, 3), 14),
+    end: setHours(addDays(firstStart, 4), 6),
     className: 'bg-lime-500 text-white',
   },
 ]
@@ -143,14 +144,21 @@ function NavigationBar({
   days,
 }: NavigationProps) {
 
+  const [customDays, setCustomDays] = useState(false)
+
   const handleTodayClick = () => {
     if (days === 1) {
-      setDate(new Date())
+      return setDate(new Date())
     }
     if (days === 3) {
-      setDate(subDays(new Date(), 1))
+      return setDate(subDays(new Date(), 1))
     }
     setDate(startOfWeek(new Date()))
+  }
+
+  const setPreset = (days: number) => {
+    setDays(days)
+    setCustomDays(false)
   }
 
   return (
@@ -158,29 +166,55 @@ function NavigationBar({
       <button onClick={handleTodayClick} >
         Today
       </button>
-      <div className="flex items-center gap-x-3">
+      <div className="flex items-center gap-x-2">
         <div onClick={prev} className="cursor-pointer border rounded-full p-1" >
+          <CaretDoubleLeft size={20} weight="bold" />
+        </div>
+        <div onClick={() => setDate(subDays(startDate, 1))} className="cursor-pointer border rounded-full p-1" >
           <CaretLeft size={20} weight="bold" />
         </div>
-        <h5>
+        <h5 className="w-28 text-center">
           {format(startDate, 'd/M')}
           &nbsp; - &nbsp;
           {format(endDate, 'd/M')}
         </h5>
-        <div onClick={next} className="cursor-pointer border rounded-full p-1" >
+        <div onClick={() => setDate(addDays(startDate, 1))} className="cursor-pointer border rounded-full p-1" >
           <CaretRight size={20} weight="bold" />
+        </div>
+        <div onClick={next} className="cursor-pointer border rounded-full p-1" >
+          <CaretDoubleRight size={20} weight="bold" />
         </div>
       </div>
       <div className="flex gap-x-3">
-        <button onClick={() => setDays(1)}>
+        <button onClick={() => setPreset(1)}>
           Day
         </button>
-        <button onClick={() => setDays(3)} >
+        <button onClick={() => setPreset(3)} >
           3 Days
         </button>
-        <button onClick={() => setDays(7)} >
+        <button onClick={() => setPreset(7)} >
           Week
         </button>
+        {customDays ? (
+          <input
+            className="border rounded px-2 h-[2.10rem] w-20"
+            type="number"
+            value={days}
+            onChange={e => {
+              // set min and max
+              const value = Number(e.target.value)
+              if (value < 1) return setDays(1)
+              if (value > 30) return setDays(30)
+              setDays(value)
+            }}
+            max={30}
+            min={1}
+          />
+        ) : (
+          <button onClick={() => setCustomDays(true)} >
+            Custom
+          </button>
+        )}
       </div>
     </div>
   )
@@ -241,7 +275,7 @@ export const LimitIsTheSky: Story = {
       if (!mouseDown.current) return
 
       // update last event
-      const DateFromMove = mouseEventToDate(e, date) // exact at cursor position
+      const DateFromMove = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
       const lastEvent = events[events.length - 1] // we'll update the event just created on mouse down
       const minDate = addMinutes(lastEvent.start, 10) // prevent an invalid range of dates
       const newEnd = DateFromMove > minDate ? DateFromMove : minDate // the end will be the current position of the cursor
@@ -256,7 +290,7 @@ export const LimitIsTheSky: Story = {
 
       if (mode !== 'paint') return
 
-      const DateFromEvent = mouseEventToDate(e, date)
+      const DateFromEvent = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
       setEvents(currEvents => [
         ...events,
         {
@@ -290,7 +324,7 @@ export const LimitIsTheSky: Story = {
       >
         {({ prev, next, endDate }) => (
           <>
-            <div className="flex items-center justify-between mb-6 w-10/12 mx-auto select-none">
+            <div className="flex items-center justify-between mb-6 w-full xl:w-10/12 mx-auto select-none">
               <NavigationBar
                 days={days}
                 prev={prev}
@@ -313,8 +347,13 @@ export const LimitIsTheSky: Story = {
             >
               <div />
               <Days>
-                {({ date, key, events }) => (
-                  <div key={key} className="text-center">
+                {({ date, events }) => (
+                  <motion.div
+                    key={date.toString()}
+                    className="text-center"
+                    layout
+                    transition={{ duration: 0.1 }}
+                  >
                     {format(date, 'ccc d')}
                     <br />
                     {events.length > 0 && (
@@ -322,7 +361,7 @@ export const LimitIsTheSky: Story = {
                         {events.length > 1 ? `${events.length} events` : '1 event'}
                       </small>
                     )}
-                  </div>
+                  </motion.div>
                 )}
               </Days>
             </div>
@@ -343,7 +382,7 @@ export const LimitIsTheSky: Story = {
                       return (
                         <div
                           key={hour}
-                          className="text-slate-300 absolute right-2"
+                          className="text-slate-400 absolute right-2"
                           style={{ top: top - 14 }}
                         >
                           {hour}:00
@@ -382,19 +421,21 @@ export const LimitIsTheSky: Story = {
                 )}
               </Ticks>
               <Days>
-                {({ key, containerRef, events, date }) => (
-                  <div
-                    key={key}
+                {({ containerRef, events, date, index }) => (
+                  <motion.div
+                    key={date.toString()}
                     ref={containerRef}
+                    layout
+                    transition={{ duration: 0.1 }}
                     className={`
-                      relative h-full row-start-1
-                      ${{
+                        relative h-full row-start-1
+                        ${{
                         'view': 'cursor-default',
-                        'move': 'cursor-move',
+                        'move': '',
                         'paint': 'cursor-crosshair',
                       }[mode]}
-                    `}
-                    style={{ gridColumnStart: Number(key) + 2 }}
+                      `}
+                    style={{ gridColumnStart: index + 2 }}
                     onMouseMove={e => handleMouseMove(e, date)}
                     onMouseDown={e => handleMouseDown(e, date)}
                     onMouseUp={handleMouseUp}
@@ -403,7 +444,7 @@ export const LimitIsTheSky: Story = {
                       const myEvent = event as MyEventProps
                       return (
                         <Event
-                          key={myEvent.title}
+                          key={myEvent.id}
                           top={top}
                           bottom={bottom}
                           mode={mode}
@@ -437,7 +478,7 @@ export const LimitIsTheSky: Story = {
                         )}
                       </Crosshair>
                     )}
-                  </div>
+                  </motion.div>
                 )}
               </Days>
             </div>

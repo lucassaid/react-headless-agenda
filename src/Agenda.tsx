@@ -30,10 +30,12 @@ export default function Agenda<TEvent extends BaseAgendaEvent>({
   onDrop = () => { },
 }: AgendaProps<TEvent>) {
 
+  const endDate = addDays(new Date(startDate), days - 1)
   const [draggingId, setDraggingId] = useState<string>('')
 
   const contextValue: AgendaContext<TEvent> = {
     startDate,
+    endDate,
     onStartDateChange,
     events,
     onEventChange,
@@ -43,8 +45,6 @@ export default function Agenda<TEvent extends BaseAgendaEvent>({
     draggingId,
     setDraggingId,
   }
-
-  const endDate = addDays(new Date(startDate), days - 1)
 
   const childrenProps: AgendaChildrenProps = {
     prev: () => onStartDateChange(subDays(new Date(startDate), days)),

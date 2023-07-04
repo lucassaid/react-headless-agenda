@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
-import Agenda, { Days, Day, Ticks, dateToPixels } from '../../src'
-import { format, startOfWeek, subHours, subMinutes } from 'date-fns'
-import { useCallback } from 'react'
+import Agenda, { Days, Ticks } from '../../src'
+import { addDays, format, startOfWeek } from 'date-fns'
+import { useState } from 'react'
 import { Needle } from '../../src'
 import { BaseAgendaEvent } from '../../src/context'
 
 const meta: Meta<typeof Agenda> = {
-  title: 'Examples/Scroll',
+  title: 'Examples/Basic',
   component: Agenda,
 }
 
@@ -28,18 +28,13 @@ const Event = (
   <div
     className={`absolute w-full p-4 rounded-lg ${className}`}
     style={{ top, bottom }}
-    onDrag={e => {
-      console.log('dragging', e)
-      e.preventDefault()
-    }}
-    draggable
   >
     {title}
     <br />
     <small>
-      {format(start, 'HH:mm')}
-      &nbsp;-&nbsp;
-      {format(end, 'HH:mm')}
+      {format(start, 'EEEE HH:mm')}<br />
+      ↓<br />
+      {format(end, 'EEEE HH:mm')}
     </small>
   </div>
 )
@@ -48,37 +43,37 @@ const events: MyEventProps[] = [
   {
     id: '0',
     title: 'Event 1',
-    start: new Date(new Date().setHours(9, 0, 0, 0)),
-    end: new Date(new Date().setHours(13, 0, 0, 0)),
+    start: addDays(new Date(new Date().setHours(5, 0, 0, 0)), -1),
+    end: addDays(new Date(new Date().setHours(12, 0, 0, 0)), -1),
     className: 'bg-blue-500 text-white',
+  },
+  {
+    id: '0',
+    title: 'Event 2',
+    start: addDays(new Date(new Date().setHours(19, 0, 0, 0)), 1),
+    end: addDays(new Date(new Date().setHours(5, 0, 0, 0)), 2),
+    className: 'bg-lime-500 text-white',
   }
 ]
 
-export const Scroll: Story = {
+export const Basic: Story = {
   render: () => {
-    /**
-     * Scroll to some specific time on mount
-     * In this case we use the start of the event
-     */
-    const scrollAreaRef = useCallback((node: HTMLDivElement) => {
-      if (node) {
-        const dateToScrollTo = subHours(events[0].start, 1) // some margin at the top
-        const top = dateToPixels(dateToScrollTo, node.scrollHeight)
-        node.scrollTo({ top, behavior: 'smooth' })
-      }
-    }, [])
+
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()))
 
     return (
       <Agenda
-        startDate={startOfWeek(new Date())}
+        startDate={startDate}
+        onStartDateChange={setStartDate}
         events={events}
       >
         {() => (
           <>
             <div
-              className="grid gap-4"
+              className="grid gap-4 h-screen"
               style={{
                 gridTemplateColumns: '60px repeat(7, 1fr)',
+                gridTemplateRows: 'min-content 1fr'
               }}
             >
               <div />
@@ -89,17 +84,10 @@ export const Scroll: Story = {
                   </div>
                 )}
               </Days>
-            </div>
-            <hr className="mt-4" />
-            <div
-              className="grid gap-4 h-80 overflow-y-scroll"
-              style={{ gridTemplateColumns: '60px repeat(7, 1fr)' }}
-              ref={scrollAreaRef}
-            >
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
-                    className="col-start-1 row-start-1 relative h-screen"
+                    className="col-start-1 row-start-2 relative"
                     ref={containerRef}
                   >
                     {ticks.map(({ hour, top }) => (
@@ -119,7 +107,7 @@ export const Scroll: Story = {
                   <div
                     key={date.toString()}
                     ref={containerRef}
-                    className="relative h-full"
+                    className="relative h-full row-start-2"
                   >
                     {events.map(({ event, top, bottom }) => {
                       const myEvent = event as MyEventProps

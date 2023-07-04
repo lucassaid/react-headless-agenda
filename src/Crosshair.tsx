@@ -1,32 +1,36 @@
-import { isSameDay, roundToNearestMinutes } from 'date-fns'
-import { dateToPixels, mouseEventToDate, pixelsToDate } from './utils'
-import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { roundToNearestMinutes } from 'date-fns'
+import { dateToPixels, pixelsToDate } from './utils'
+import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { dayContext } from './Day'
 
-interface NeedleProps {
-  children: (props: { top: number, date: Date }) => ReactNode
+interface CrosshairChildrenProps {
+  top: number
+  date: Date
+}
+interface CrosshairProps {
+  children: (props: CrosshairChildrenProps) => ReactNode
   roundMinutes?: number
 }
 
-export default function Crosshair({ children, roundMinutes = 1 }: NeedleProps) {
+export default function Crosshair({ children, roundMinutes = 1 }: CrosshairProps) {
 
-  const { columnHeight, date: dayDate, columnContainerRef } = useContext(dayContext)
-  const [date, setDate] = useState<Date | null>(null)
-
-  const top = useMemo(() => (
-    date && dateToPixels(date, columnHeight)
-  ), [columnHeight, date])
+  const { date: dayDate, columnContainerRef } = useContext(dayContext)
+  const [childrenProps, setChildrenProps] = useState<CrosshairChildrenProps | null>(null)
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!columnContainerRef.current) return
     const { top, height } = columnContainerRef.current.getBoundingClientRect()
     const dateFromEvent = pixelsToDate(e.clientY - top, height, dayDate)
-    const finalCrosshairDate = roundToNearestMinutes(dateFromEvent, { nearestTo: roundMinutes })
-    setDate(finalCrosshairDate)
+    const crossHairDate = roundToNearestMinutes(dateFromEvent, { nearestTo: roundMinutes })
+    const crossHairTop = dateToPixels(crossHairDate, height)
+    setChildrenProps({
+      top: crossHairTop,
+      date: crossHairDate,
+    })
   }, [dayDate, columnContainerRef, roundMinutes])
 
   const handleMouseLeave = useCallback(() => {
-    setDate(null)
+    setChildrenProps(null)
   }, [])
 
   useEffect(() => {
@@ -40,12 +44,11 @@ export default function Crosshair({ children, roundMinutes = 1 }: NeedleProps) {
     }
   }, [handleMouseMove, handleMouseLeave, columnContainerRef])
 
-  if (!date || top === null) return null
-  if (!isSameDay(dayDate, date)) return null
+  if (!childrenProps) return null
 
   return (
     <>
-      {children({ top, date })}
+      {children(childrenProps)}
     </>
   )
 }

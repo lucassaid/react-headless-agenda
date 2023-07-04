@@ -85,8 +85,8 @@ import { format }  from 'date-fns'
 
 <div className="flex">
   <Days>
-    {({ date, key }) => (
-      <div key={key} className="flex-1">
+    {({ date }) => (
+      <div key={date.toString()} className="flex-1">
         {format(date, 'ccc d')}
       </div>
     )}
@@ -103,9 +103,9 @@ Now the fun part, render your events!
 ```tsx
 // this will be inside <Agenda/> and will receive the events from the context.
 <Days>
-  {({ key, containerRef, events }) => (
+  {({ date, containerRef, events }) => (
     <div
-      key={key}
+      key={date.toString()}
       ref={containerRef}
       className="relative h-full"
     >

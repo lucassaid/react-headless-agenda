@@ -23,9 +23,9 @@ export const PixelsToDateUsage: Story = {
         {() => (
           <div className="grid h-[500px] grid-cols-1" >
             <Days>
-              {({ date, key, containerRef }) => (
+              {({ date, containerRef }) => (
                 <div
-                  key={key}
+                  key={date.toString()}
                   ref={containerRef}
                   className="relative h-full row-start-1 col-start-1 cursor-pointer z-10"
                   onClick={e => handleClick(e, date)}

@@ -15,8 +15,8 @@ For the header, you could use something like this:
   code={`
 <div className="flex max-w-lg">
   <Days>
-    {({ date, key }) => (
-      <div key={key} className="flex-1 center">
+    {({ date }) => (
+      <div key={date.toString()} className="flex-1 center">
         {format(date, 'ccc d')}
       </div>
     )}
@@ -36,9 +36,9 @@ Use the provided `events` to render the events for each day
   code={`
 <div className="flex gap-x-4">
   <Days>
-    {({ key, containerRef, events }) => (
+    {({ date, containerRef, events }) => (
       <div
-        key={key}
+        key={date.toString()}
         ref={containerRef}
         className="relative flex-1"
       >
