@@ -1,0 +1,180 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import { Basic } from './full-examples/Basic.stories'
+
+<Meta title="Introduction" />
+
+<img src="../assets/logo.svg" style={{ width: 100 }} />
+<div style={{ marginBottom: 10 }} />
+# React Headless Agenda
+
+The motivation for this project was to crate a library that completely separates the markup from the logic implied when rendering an agenda view. You'll need some basic knowledge of React, and CSS Grid to use this library.
+
+This article will guide you to create your first agenda, that will look like this:
+
+<Canvas of={Basic} />
+
+
+## 1) Add the `<Agenda>` component:
+
+```tsx
+import Agenda from 'react-headless-agenda'
+import { startOfWeek, addHours }  from 'date-fns'
+
+// only `start` and `end` are required! This event starts now and ends in five hours
+const events = [
+  {
+    id: 'event1',
+    someTitle: 'Hey there!',
+    start: new Date(),
+    end:  addHours(new Date(), 5),
+  }
+]
+
+<Agenda
+  startDate={startOfWeek(new Date())}
+  events={events}
+/>
+```
+
+## 2) Add a grid container inside `<Agenda>`
+The grid will have a predefined column of 60px for the hours column, and then will take the rest of the space for the days.
+We'll also define two rows, one for the header where we'll have the name and the number of the day, and the second row for the events.
+
+```tsx
+<Agenda
+  startDate={startOfWeek(new Date())}
+  events={events}
+>
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: '60px', // only the hours column is defined
+      gridTemplateRows: 'min-content 1fr' // the first row is for the header, the second for the events
+    }}
+  />
+</Agenda>
+```
+
+Inline styles were used only for demo purposes, use classes instead whenever possible.
+
+
+## 3) Render your elements in the grid
+
+### Rendering header
+You don't need to specify the column, it will be automatically placed from left to right.
+
+```tsx
+<div /> // empty cell to be automatically placed at the left
+<Days>
+  {({ date }) => (
+    <div key={date.toString()} className="text-center">
+      {format(date, 'ccc d')}
+    </div>
+  )}
+</Days>
+```
+
+### Rendering hours at the left
+Now you can add the hours using `<Ticks>`. I use TailwindCSS but that is of course optional (use TailwindCSS though, you won't regret it).
+
+
+Note this time you need to specify the row you want to use. You probably want to use absolute position for each hour, so you can place them around with the provided `top` property.
+
+```tsx
+<Ticks>
+  {({ containerRef, ticks }) => (
+    <div
+      className="row-start-2 relative"
+      ref={containerRef}
+    >
+      {ticks.map(({ hour, top }) => (
+        <div
+          key={hour}
+          className="text-slate-300 absolute right-2"
+          style={{ top }}
+        >
+          {hour} hs
+        </div>
+      ))}
+    </div>
+  )}
+</Ticks>
+```
+
+### Rendering events
+Finally, we can add the events. We'll use `<Days>` again.
+For each day, instead of rendering its name and number, we'll render its events:
+
+```tsx
+<Days>
+  {({ date, containerRef, events }) => (
+    <div
+      key={date.toString()}
+      ref={containerRef}
+      className="relative h-full row-start-2"
+    >
+      {events.map(({ event, top, bottom, className }) => (
+        <div
+          className={`absolute w-full p-4 rounded-lg ${className}`}
+          style={{ top, bottom }}
+        >
+          {title}
+          <br />
+          <small>
+            {format(start, 'EEEE HH:mm')}<br />
+            ↓<br />
+            {format(end, 'EEEE HH:mm')}
+          </small>
+        </div>
+      ))}
+    </div>
+  )}
+</Days>
+```
+The function `format` is from [date-fns](https://www.npmjs.com/package/date-fns), like any other time-manipulation fuction you might see in these docs.
+
+<br/>
+
+### About placing elements in a grid
+The library leverages to you the power of CSS Grid, so you can place your elements wherever you want.
+Note that in this example, we didn't have to specify the column for each day. This won't be the case when
+you want to render horizontal lines behind the events. In this latter case, you'll need to specify both
+the position of the horizontal lines (ticks) and the days::
+
+```tsx
+<Ticks>
+  {({ containerRef, ticks }) => (
+    <div
+      // specifying the column and the row ↓
+      className="col-start-2 col-span-7 row-start-2 row-end-2 -z-10 relative"
+      ref={containerRef}
+    >
+      {ticks.map(({ hour, top }) => (
+        <div
+          key={hour}
+          className="opacity-30 h-0.5 bg-slate-300 absolute right-0 -left-4"
+          style={{ top }}
+        />
+      ))}
+    </div>
+  )}
+</Ticks>
+<Days>
+  {({ date, containerRef, events, index }) => (
+    <div
+      key={date.toString()}
+      ref={containerRef}
+      className="relative h-full row-start-2" // specifying row
+      style={{ gridColumnStart: index + 2 }} // specifying column dinamically
+    >
+     ...
+```
+
+Yes, you can use `<Ticks />` to render either the hours or the horizontal lines, it's up to you.
+
+
+<br/>
+
+## 🎉 You got it!
+Now you can create an agenda that suits your needs, the floor is yours!
+Have a look at the components, the interactions or full examples to keep learing.

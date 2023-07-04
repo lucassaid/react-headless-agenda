@@ -87,7 +87,7 @@ export const Basic: Story = {
               <Ticks>
                 {({ containerRef, ticks }) => (
                   <div
-                    className="col-start-1 row-start-2 relative"
+                    className="row-start-2 relative"
                     ref={containerRef}
                   >
                     {ticks.map(({ hour, top }) => (
