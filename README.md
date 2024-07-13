@@ -91,7 +91,8 @@ It lets you render whatever you need to, for each day. For example, let's render
 
 ```tsx
 import { format } from 'date-fns'
-;<div className="flex">
+
+<div className="flex">
   <Days>
     {({ date }) => (
       <div key={date.toString()} className="flex-1">
