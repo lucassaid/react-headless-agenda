@@ -1,13 +1,30 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react'
 import Agenda, { Crosshair, Days, Ticks, useResize } from '../../src'
-import { addDays, addMinutes, format, roundToNearestMinutes, setHours, startOfWeek, subDays } from 'date-fns'
+import {
+  addDays,
+  addMinutes,
+  format,
+  roundToNearestMinutes,
+  setHours,
+  startOfWeek,
+  subDays,
+} from 'date-fns'
 import { MouseEvent, useCallback, useRef, useState } from 'react'
 import { Needle } from '../../src'
 import { BaseAgendaEvent } from '../../src/context'
 import { AgendaChildrenProps } from '../../src/Agenda'
 import { mouseEventToDate, useDragEvent } from '../../src/utils'
-import { ArrowsOutCardinal, CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight, Eye, PaintBrushBroad, X } from 'phosphor-react'
+import {
+  ArrowsOutCardinal,
+  CaretDoubleLeft,
+  CaretDoubleRight,
+  CaretLeft,
+  CaretRight,
+  Eye,
+  PaintBrushBroad,
+  X,
+} from 'phosphor-react'
 import { ExtendedEventProps } from '../../src/types'
 import { motion } from 'framer-motion'
 
@@ -29,23 +46,20 @@ interface MyEventProps extends BaseAgendaEvent {
   className?: string
 }
 
-const Event = (
-  {
-    id,
-    title,
-    top,
-    bottom,
-    className,
-    start,
-    end,
-    mode,
-    onDelete,
-    startsBeforeToday,
-    endsAfterToday,
-    isDragging,
-  }: MyEventProps & ExtendedEventProps & { mode: Mode, onDelete: () => void }
-) => {
-
+const Event = ({
+  id,
+  title,
+  top,
+  bottom,
+  className,
+  start,
+  end,
+  mode,
+  onDelete,
+  startsBeforeToday,
+  endsAfterToday,
+  isDragging,
+}: MyEventProps & ExtendedEventProps & { mode: Mode; onDelete: () => void }) => {
   const { handleDragStart, handleDrag } = useResize(id)
   const { handleDragStart: handle2 } = useDragEvent(id)
 
@@ -55,11 +69,13 @@ const Event = (
       className={`
         absolute w-full p-4 rounded-lg
         ${className}
-        ${{
-          'view': 'opacity-90',
-          'move': 'cursor-move shadow-lg',
-          'paint': '',
-        }[mode]}
+        ${
+          {
+            view: 'opacity-90',
+            move: 'cursor-move shadow-lg',
+            paint: '',
+          }[mode]
+        }
         ${startsBeforeToday ? 'rounded-t-none' : ''}
         ${endsAfterToday ? 'rounded-b-none' : ''}
         ${isDragging ? 'ring z-40' : mode === 'move' ? 'opacity-90' : ''}
@@ -143,7 +159,6 @@ function NavigationBar({
   setDays,
   days,
 }: NavigationProps) {
-
   const [customDays, setCustomDays] = useState(false)
 
   const handleTodayClick = () => {
@@ -163,14 +178,15 @@ function NavigationBar({
 
   return (
     <div className="flex justify-between items-center gap-x-16">
-      <button onClick={handleTodayClick} >
-        Today
-      </button>
+      <button onClick={handleTodayClick}>Today</button>
       <div className="flex items-center gap-x-2">
-        <div onClick={prev} className="cursor-pointer border rounded-full p-1" >
+        <div onClick={prev} className="cursor-pointer border rounded-full p-1">
           <CaretDoubleLeft size={20} weight="bold" />
         </div>
-        <div onClick={() => setDate(subDays(startDate, 1))} className="cursor-pointer border rounded-full p-1" >
+        <div
+          onClick={() => setDate(subDays(startDate, 1))}
+          className="cursor-pointer border rounded-full p-1"
+        >
           <CaretLeft size={20} weight="bold" />
         </div>
         <h5 className="w-28 text-center">
@@ -178,29 +194,26 @@ function NavigationBar({
           &nbsp; - &nbsp;
           {format(endDate, 'd/M')}
         </h5>
-        <div onClick={() => setDate(addDays(startDate, 1))} className="cursor-pointer border rounded-full p-1" >
+        <div
+          onClick={() => setDate(addDays(startDate, 1))}
+          className="cursor-pointer border rounded-full p-1"
+        >
           <CaretRight size={20} weight="bold" />
         </div>
-        <div onClick={next} className="cursor-pointer border rounded-full p-1" >
+        <div onClick={next} className="cursor-pointer border rounded-full p-1">
           <CaretDoubleRight size={20} weight="bold" />
         </div>
       </div>
       <div className="flex gap-x-3">
-        <button onClick={() => setPreset(1)}>
-          Day
-        </button>
-        <button onClick={() => setPreset(3)} >
-          3 Days
-        </button>
-        <button onClick={() => setPreset(7)} >
-          Week
-        </button>
+        <button onClick={() => setPreset(1)}>Day</button>
+        <button onClick={() => setPreset(3)}>3 Days</button>
+        <button onClick={() => setPreset(7)}>Week</button>
         {customDays ? (
           <input
             className="border rounded px-2 h-[2.10rem] w-20"
             type="number"
             value={days}
-            onChange={e => {
+            onChange={(e) => {
               // set min and max
               const value = Number(e.target.value)
               if (value < 1) return setDays(1)
@@ -211,23 +224,25 @@ function NavigationBar({
             min={1}
           />
         ) : (
-          <button onClick={() => setCustomDays(true)} >
-            Custom
-          </button>
+          <button onClick={() => setCustomDays(true)}>Custom</button>
         )}
       </div>
     </div>
   )
 }
 
-function ModeButtons({ mode, setMode }: { mode: Mode, setMode: (mode: Mode) => void }) {
+function ModeButtons({ mode, setMode }: { mode: Mode; setMode: (mode: Mode) => void }) {
   return (
     <div className="flex items-center space-x-3">
       <button
         onClick={() => setMode('view')}
         className={`
           flex items-center gap-x-2
-          ${mode === 'view' ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500' : ''}
+          ${
+            mode === 'view'
+              ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500'
+              : ''
+          }
         `}
       >
         <Eye size={20} />
@@ -237,7 +252,11 @@ function ModeButtons({ mode, setMode }: { mode: Mode, setMode: (mode: Mode) => v
         onClick={() => setMode('move')}
         className={`
           flex items-center gap-x-2
-          ${mode === 'move' ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500' : ''}
+          ${
+            mode === 'move'
+              ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500'
+              : ''
+          }
         `}
       >
         <ArrowsOutCardinal size={20} />
@@ -247,7 +266,11 @@ function ModeButtons({ mode, setMode }: { mode: Mode, setMode: (mode: Mode) => v
         onClick={() => setMode('paint')}
         className={`
           flex items-center gap-x-2
-          ${mode === 'paint' ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500' : ''}
+          ${
+            mode === 'paint'
+              ? 'bg-blue-500 text-white border-blue-500 ring hover:border-blue-500'
+              : ''
+          }
         `}
       >
         <PaintBrushBroad size={20} />
@@ -259,7 +282,6 @@ function ModeButtons({ mode, setMode }: { mode: Mode, setMode: (mode: Mode) => v
 
 export const LimitIsTheSky: Story = {
   render: () => {
-
     const [startDate, setStartDate] = useState(startOfWeek(new Date()))
     const [days, setDays] = useState(7)
     const [events, setEvents] = useState(initialEvents)
@@ -268,41 +290,46 @@ export const LimitIsTheSky: Story = {
     const [dragging, setDragging] = useState(false)
 
     const handleEventChange = useCallback((event: MyEventProps) => {
-      setEvents(curr => curr.map(e => e.id === event.id ? event : e))
+      setEvents((curr) => curr.map((e) => (e.id === event.id ? event : e)))
     }, [])
 
-    const handleMouseMove = useCallback((e: MouseEvent<HTMLElement>, date: Date) => {
-      if (!mouseDown.current) return
+    const handleMouseMove = useCallback(
+      (e: MouseEvent<HTMLElement>, date: Date) => {
+        if (!mouseDown.current) return
 
-      // update last event
-      const DateFromMove = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
-      const lastEvent = events[events.length - 1] // we'll update the event just created on mouse down
-      const minDate = addMinutes(lastEvent.start, 10) // prevent an invalid range of dates
-      const newEnd = DateFromMove > minDate ? DateFromMove : minDate // the end will be the current position of the cursor
-      setEvents(currEvents => {
-        const newEvents = [...currEvents]
-        newEvents[newEvents.length - 1].end = newEnd
-        return newEvents
-      })
-    }, [events])
+        // update last event
+        const DateFromMove = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
+        const lastEvent = events[events.length - 1] // we'll update the event just created on mouse down
+        const minDate = addMinutes(lastEvent.start, 10) // prevent an invalid range of dates
+        const newEnd = DateFromMove > minDate ? DateFromMove : minDate // the end will be the current position of the cursor
+        setEvents((currEvents) => {
+          const newEvents = [...currEvents]
+          newEvents[newEvents.length - 1].end = newEnd
+          return newEvents
+        })
+      },
+      [events]
+    )
 
-    const handleMouseDown = useCallback((e: MouseEvent<HTMLElement>, date: Date) => {
+    const handleMouseDown = useCallback(
+      (e: MouseEvent<HTMLElement>, date: Date) => {
+        if (mode !== 'paint') return
 
-      if (mode !== 'paint') return
-
-      const DateFromEvent = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
-      setEvents(currEvents => [
-        ...events,
-        {
-          id: (currEvents.length + 1).toString(),
-          title: `New Event ${currEvents.length + 1}`,
-          start: DateFromEvent,
-          end: addMinutes(DateFromEvent, 10),
-          className: 'bg-red-400 text-white z-10',
-        }
-      ])
-      mouseDown.current = true
-    }, [events, mode])
+        const DateFromEvent = roundToNearestMinutes(mouseEventToDate(e, date), { nearestTo: 15 })
+        setEvents((currEvents) => [
+          ...events,
+          {
+            id: (currEvents.length + 1).toString(),
+            title: `New Event ${currEvents.length + 1}`,
+            start: DateFromEvent,
+            end: addMinutes(DateFromEvent, 10),
+            className: 'bg-red-400 text-white z-10',
+          },
+        ])
+        mouseDown.current = true
+      },
+      [events, mode]
+    )
 
     const handleMouseUp = useCallback(() => {
       mouseDown.current = false
@@ -334,10 +361,7 @@ export const LimitIsTheSky: Story = {
                 setDate={setStartDate}
                 setDays={setDays}
               />
-              <ModeButtons
-                mode={mode}
-                setMode={setMode}
-              />
+              <ModeButtons mode={mode} setMode={setMode} />
             </div>
             <div
               className="grid gap-4 select-none border-b pb-2"
@@ -366,17 +390,14 @@ export const LimitIsTheSky: Story = {
               </Days>
             </div>
             <div
-              className="grid gap-4 select-none h-[700px] overflow-hidden"
+              className="grid gap-4 select-none h-[550px] overflow-hidden bg-slate-100"
               style={{
                 gridTemplateColumns: `60px repeat(${days}, 1fr)`,
               }}
             >
               <Ticks>
                 {({ containerRef, ticks }) => (
-                  <div
-                    className="col-start-1 row-start-1 relative h-full"
-                    ref={containerRef}
-                  >
+                  <div className="col-start-1 row-start-1 relative h-full" ref={containerRef}>
                     {ticks.map(({ hour, top }) => {
                       if (hour % 2 === 0) return null
                       return (
@@ -397,7 +418,7 @@ export const LimitIsTheSky: Story = {
                   <div
                     className={`
                       col-start-2 row-start-1 relative h-full transition-all
-                      ${dragging ? 'bg-slate-100' : ''}
+                      ${dragging ? 'bg-slate-200' : ''}
                     `}
                     ref={containerRef}
                     style={{
@@ -411,7 +432,7 @@ export const LimitIsTheSky: Story = {
                           key={hour}
                           className={`
                             h-0.5 w-full absolute 
-                            ${dragging ? 'bg-slate-200' : 'bg-slate-50'}
+                            ${dragging ? 'bg-slate-300' : 'bg-slate-200'}
                           `}
                           style={{ top: top }}
                         />
@@ -429,51 +450,45 @@ export const LimitIsTheSky: Story = {
                     transition={{ duration: 0.1 }}
                     className={`
                         relative h-full row-start-1
-                        ${{
-                        'view': 'cursor-default',
-                        'move': '',
-                        'paint': 'cursor-crosshair',
-                      }[mode]}
+                        ${
+                          {
+                            view: 'cursor-default',
+                            move: '',
+                            paint: 'cursor-crosshair',
+                          }[mode]
+                        }
                       `}
                     style={{ gridColumnStart: index + 2 }}
-                    onMouseMove={e => handleMouseMove(e, date)}
-                    onMouseDown={e => handleMouseDown(e, date)}
+                    onMouseMove={(e) => handleMouseMove(e, date)}
+                    onMouseDown={(e) => handleMouseDown(e, date)}
                     onMouseUp={handleMouseUp}
                   >
-                    {events.map(({ event, top, bottom, endsAfterToday, startsBeforeToday, isDragging }) => {
-                      const myEvent = event as MyEventProps
-                      return (
-                        <Event
-                          key={myEvent.id}
-                          top={top}
-                          bottom={bottom}
-                          mode={mode}
-                          onDelete={() => setEvents(curr => curr.filter(e => e.id !== myEvent.id))}
-                          startsBeforeToday={startsBeforeToday}
-                          endsAfterToday={endsAfterToday}
-                          isDragging={isDragging}
-                          {...myEvent}
-                        />
-                      )
-                    })}
-                    <Needle>
-                      {({ top }) => (
-                        <div
-                          className="needle"
-                          style={{ top }}
-                        />
-                      )}
-                    </Needle>
+                    {events.map(
+                      ({ event, top, bottom, endsAfterToday, startsBeforeToday, isDragging }) => {
+                        const myEvent = event as MyEventProps
+                        return (
+                          <Event
+                            key={myEvent.id}
+                            top={top}
+                            bottom={bottom}
+                            mode={mode}
+                            onDelete={() =>
+                              setEvents((curr) => curr.filter((e) => e.id !== myEvent.id))
+                            }
+                            startsBeforeToday={startsBeforeToday}
+                            endsAfterToday={endsAfterToday}
+                            isDragging={isDragging}
+                            {...myEvent}
+                          />
+                        )
+                      }
+                    )}
+                    <Needle>{({ top }) => <div className="needle" style={{ top }} />}</Needle>
                     {mode === 'paint' && (
                       <Crosshair>
                         {({ top, date }) => (
-                          <div
-                            className="absolute h-0.5 bg-slate-300 z-40 w-full"
-                            style={{ top }}
-                          >
-                            <small className="text-slate-500">
-                              {format(date, 'HH:mm')}
-                            </small>
+                          <div className="absolute h-0.5 bg-slate-300 z-40 w-full" style={{ top }}>
+                            <small className="text-slate-500">{format(date, 'HH:mm')}</small>
                           </div>
                         )}
                       </Crosshair>
@@ -486,5 +501,5 @@ export const LimitIsTheSky: Story = {
         )}
       </Agenda>
     )
-  }
+  },
 }

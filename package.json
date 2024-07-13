@@ -1,9 +1,20 @@
 {
   "name": "react-headless-agenda",
-  "version": "0.1.4",
+  "version": "0.2.2",
   "description": "Headless agenda for React",
-  "main": "dist/index.js",
-  "types": "dist/index.d.js",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/src/index.d.js",
+        "default": "./dist/src/index.js"
+      }
+    }
+  },
+  "files": [
+    "/dist/src"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./dist && tsc",
@@ -25,16 +36,13 @@
   "author": "Lucas Said",
   "license": "ISC",
   "homepage": "https://github.com/lucassaid/react-headless-agenda#readme",
-  "dependencies": {
-    "date-fns": "^2.28.0"
-  },
   "peerDependencies": {
-    "react": "^16 || ^17 || ^18",
-    "react-dom": "^16 || ^17 || ^18"
+    "react": "^18"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.23",
     "@storybook/addon-interactions": "^7.0.23",
+    "date-fns": "^2.28.0",
     "@storybook/addon-links": "^7.0.23",
     "@storybook/addon-storysource": "^7.0.24",
     "@storybook/addon-styling": "^1.3.0",

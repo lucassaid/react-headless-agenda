@@ -1,4 +1,10 @@
-import { differenceInSeconds, endOfDay, startOfDay, addMinutes, differenceInMinutes } from 'date-fns'
+import {
+  differenceInSeconds,
+  endOfDay,
+  startOfDay,
+  addMinutes,
+  differenceInMinutes,
+} from './date-utils'
 import { useCallback, useContext } from 'react'
 import agendaContext from './context'
 import { dayContext } from './Day'
@@ -19,7 +25,7 @@ export const pixelsToDate = (pixels: number, columnHeight: number, pivot = new D
 }
 
 /**
- * 
+ *
  * @param e A synthetic event
  * @param pivotDate Reference date
  * @returns a date
@@ -38,27 +44,29 @@ export const hideDragGhost = (e: React.DragEvent<HTMLElement>) => {
 }
 
 export const useDragEvent = (eventId: string, roundMinutes = 15) => {
-
   const { events, onDragStart, setDraggingId } = useContext(agendaContext)
   const { columnHeight, date, topRef } = useContext(dayContext)
 
-  const handleDragStart = useCallback((e: React.DragEvent<HTMLElement>) => {
-    hideDragGhost(e)
-    setDraggingId(eventId)
+  const handleDragStart = useCallback(
+    (e: React.DragEvent<HTMLElement>) => {
+      hideDragGhost(e)
+      setDraggingId(eventId)
 
-    e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.effectAllowed = 'move'
 
-    const event = events.find(event => event.id === eventId)
-    if (!event) return
+      const event = events.find((event) => event.id === eventId)
+      if (!event) return
 
-    onDragStart(eventId)
+      onDragStart(eventId)
 
-    // difference in minutes between the start of the event and the cursor position
-    const mouseDate = pixelsToDate(e.clientY - topRef.current, columnHeight, date)
-    const offsetMinutes = differenceInMinutes(mouseDate, event.start)
+      // difference in minutes between the start of the event and the cursor position
+      const mouseDate = pixelsToDate(e.clientY - topRef.current, columnHeight, date)
+      const offsetMinutes = differenceInMinutes(mouseDate, event.start)
 
-    e.dataTransfer.setData(`${eventId};${offsetMinutes};${roundMinutes}`, '')
-  }, [columnHeight, date, events, eventId, roundMinutes, topRef, onDragStart, setDraggingId])
+      e.dataTransfer.setData(`${eventId};${offsetMinutes};${roundMinutes}`, '')
+    },
+    [columnHeight, date, events, eventId, roundMinutes, topRef, onDragStart, setDraggingId]
+  )
 
   return {
     handleDragStart,

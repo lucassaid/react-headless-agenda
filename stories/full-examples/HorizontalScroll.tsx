@@ -22,17 +22,20 @@ interface MyEventProps extends BaseAgendaEvent {
   className?: string
 }
 
-const Event = (
-  { title, top, bottom, className, start, end }: MyEventProps & { top: number, bottom: number }
-) => (
-  <div
-    className={`absolute w-full p-4 rounded-lg ${className}`}
-    style={{ top, bottom }}
-  >
+const Event = ({
+  title,
+  top,
+  bottom,
+  className,
+  start,
+  end,
+}: MyEventProps & { top: number; bottom: number }) => (
+  <div className={`absolute w-full p-4 rounded-lg ${className}`} style={{ top, bottom }}>
     {title}
     <br />
     <small>
-      {format(start, 'EEEE HH:mm')}<br />
+      {format(start, 'EEEE HH:mm')}
+      <br />
       ↓<br />
       {format(end, 'EEEE HH:mm')}
     </small>
@@ -53,27 +56,22 @@ const events: MyEventProps[] = [
     start: addDays(new Date(new Date().setHours(19, 0, 0, 0)), 1),
     end: addDays(new Date(new Date().setHours(5, 0, 0, 0)), 2),
     className: 'bg-lime-500 text-white',
-  }
+  },
 ]
 
 export const Basic: Story = {
   render: () => {
-
     const [startDate, setStartDate] = useState(startOfWeek(new Date()))
 
     return (
-      <Agenda
-        startDate={startDate}
-        onStartDateChange={setStartDate}
-        events={events}
-      >
+      <Agenda startDate={startDate} onStartDateChange={setStartDate} events={events}>
         {() => (
           <>
             <div
               className="grid gap-4 h-screen"
               style={{
                 gridTemplateColumns: '60px repeat(7, 1fr)',
-                gridTemplateRows: 'min-content 1fr'
+                gridTemplateRows: 'min-content 1fr',
               }}
             >
               <div />
@@ -86,10 +84,7 @@ export const Basic: Story = {
               </Days>
               <Ticks>
                 {({ containerRef, ticks }) => (
-                  <div
-                    className="col-start-1 row-start-2 relative"
-                    ref={containerRef}
-                  >
+                  <div className="col-start-1 row-start-2 relative" ref={containerRef}>
                     {ticks.map(({ hour, top }) => (
                       <div
                         key={hour}
@@ -111,16 +106,11 @@ export const Basic: Story = {
                   >
                     {events.map(({ event, top, bottom }) => {
                       const myEvent = event as MyEventProps
-                      return (
-                        <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
-                      )
+                      return <Event key={myEvent.title} {...myEvent} top={top} bottom={bottom} />
                     })}
                     <Needle>
                       {({ top }) => (
-                        <div
-                          className="absolute h-1 bg-red-400 z-40 w-full"
-                          style={{ top }}
-                        />
+                        <div className="absolute h-1 bg-red-400 z-40 w-full" style={{ top }} />
                       )}
                     </Needle>
                   </div>

@@ -2,9 +2,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "react-headless-agenda": [
-        "./src/index"
-      ]
+      "react-headless-agenda": ["./src/index"]
     },
     "target": "esnext",
     "declaration": true,
@@ -17,13 +15,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
-    "lib": [
-      "es2017",
-      "DOM"
-    ],
+    "lib": ["es2017", "DOM"]
   },
-  "include": [
-    "src",
-    "stories"
-  ],
+  "include": ["src", "stories"]
 }

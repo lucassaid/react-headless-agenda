@@ -5,7 +5,7 @@ import {
   isWithinInterval,
   roundToNearestMinutes,
   startOfDay,
-} from 'date-fns'
+} from './date-utils'
 import {
   createContext,
   ReactNode,
@@ -48,39 +48,50 @@ export interface DayChildrenProps {
 }
 
 interface DayProps {
-  date: Date,
+  date: Date
   children: (props: DayChildrenProps) => ReactNode
 }
 
 export default function Day({ date, children }: DayProps) {
-
-  const { events: allEvents, onEventChange, onDrop, draggingId, setDraggingId } = useContext(agendaContext)
+  const {
+    events: allEvents,
+    onEventChange,
+    onDrop,
+    draggingId,
+    setDraggingId,
+  } = useContext(agendaContext)
   const columnContainerRef = useRef<HTMLDivElement | null>(null)
   const [columnHeight, setColumnHeight] = useState(0)
   const topRef = useRef(0)
 
-  const handleDragOver = useCallback((e: DragEvent) => {
-    e.preventDefault()
+  const handleDragOver = useCallback(
+    (e: DragEvent) => {
+      e.preventDefault()
 
-    const dragData = e.dataTransfer?.types[0]
-    if (!dragData) return
-    const [draggingId, offsetMinutes, roundMinutes] = dragData.split(';')
+      const dragData = e.dataTransfer?.types[0]
+      if (!dragData) return
+      const [draggingId, offsetMinutes, roundMinutes] = dragData.split(';')
 
-    const event = allEvents.find(e => e.id === draggingId)
-    if (!event) return
+      const event = allEvents.find((e) => e.id === draggingId)
+      if (!event) return
 
-    const newTop = (e.clientY - topRef.current)
-    const newStart = roundToNearestMinutes(addMinutes(pixelsToDate(newTop, columnHeight, date), - Number(offsetMinutes)), { nearestTo: Number(roundMinutes) })
+      const newTop = e.clientY - topRef.current
+      const newStart = roundToNearestMinutes(
+        addMinutes(pixelsToDate(newTop, columnHeight, date), -Number(offsetMinutes)),
+        { nearestTo: Number(roundMinutes) }
+      )
 
-    const currentDiff = differenceInMinutes(event.end, event.start)
-    const newEnd = addMinutes(newStart, currentDiff)
+      const currentDiff = differenceInMinutes(event.end, event.start)
+      const newEnd = addMinutes(newStart, currentDiff)
 
-    onEventChange({
-      ...event,
-      start: newStart,
-      end: newEnd,
-    })
-  }, [columnHeight, allEvents, date, onEventChange])
+      onEventChange({
+        ...event,
+        start: newStart,
+        end: newEnd,
+      })
+    },
+    [columnHeight, allEvents, date, onEventChange]
+  )
 
   const containerRef = useCallback((node: HTMLDivElement) => {
     if (node) {
@@ -90,10 +101,13 @@ export default function Day({ date, children }: DayProps) {
     }
   }, [])
 
-  const handleDrop = useCallback((e: DragEvent) => {
-    onDrop()
-    setDraggingId('')
-  }, [onDrop, setDraggingId])
+  const handleDrop = useCallback(
+    (e: DragEvent) => {
+      onDrop()
+      setDraggingId('')
+    },
+    [onDrop, setDraggingId]
+  )
 
   useEffect(() => {
     const node = columnContainerRef.current
@@ -107,18 +121,14 @@ export default function Day({ date, children }: DayProps) {
   }, [handleDragOver, handleDrop])
 
   const events = useMemo(() => {
-
     const columnEvents = allEvents.filter(({ start, end }) => {
       if (differenceInMinutes(end, startOfDay(date)) === 0) return false
       if (isSameDay(start, date) || isSameDay(end, date)) return true
       return isWithinInterval(date, { start, end })
     })
 
-    return columnEvents.map(event => {
-
-      const top = isSameDay(event.start, date)
-        ? dateToPixels(event.start, columnHeight)
-        : 0
+    return columnEvents.map((event) => {
+      const top = isSameDay(event.start, date) ? dateToPixels(event.start, columnHeight) : 0
 
       const bottom = isSameDay(event.end, date)
         ? columnHeight - dateToPixels(event.end, columnHeight)

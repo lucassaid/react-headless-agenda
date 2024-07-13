@@ -1,15 +1,15 @@
-import { addDays } from 'date-fns'
+import { addDays } from './date-utils'
 import { useContext, useMemo, ReactNode } from 'react'
 import context from './context'
 import Day, { DayChildrenProps } from './Day'
 
 export interface WeekDayProps extends DayChildrenProps {
-  date: Date,
-  index: number,
+  date: Date
+  index: number
 }
 
 export interface WeekProps {
-  children: (childrenProps: WeekDayProps) => ReactNode,
+  children: (childrenProps: WeekDayProps) => ReactNode
 }
 
 export default function Days({ children }: WeekProps) {

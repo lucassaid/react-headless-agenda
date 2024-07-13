@@ -1,4 +1,4 @@
-import { isToday } from 'date-fns'
+import { isToday } from './date-utils'
 import { dateToPixels } from './utils'
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import { dayContext } from './Day'
@@ -8,7 +8,6 @@ interface NeedleProps {
 }
 
 export default function Needle({ children }: NeedleProps) {
-
   const { columnHeight, date } = useContext(dayContext)
 
   const [top, setTop] = useState(dateToPixels(new Date(), columnHeight))
@@ -28,9 +27,5 @@ export default function Needle({ children }: NeedleProps) {
 
   if (!isToday(date)) return null
 
-  return (
-    <>
-      {children({ top })}
-    </>
-  )
+  return <>{children({ top })}</>
 }

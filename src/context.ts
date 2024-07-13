@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns'
+import { addDays } from './date-utils'
 import { createContext } from 'react'
 
 export interface BaseAgendaEvent {
