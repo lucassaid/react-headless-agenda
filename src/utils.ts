@@ -54,7 +54,10 @@ export const useDragEvent = (eventId: string, roundMinutes = 15) => {
       e.dataTransfer.effectAllowed = 'move'
 
       const event = events.find((event) => event.id === eventId)
-      if (!event) return
+      if (!event) {
+        console.warn(`Could not find event ${eventId}`)
+        return
+      }
 
       onDragStart(eventId)
 

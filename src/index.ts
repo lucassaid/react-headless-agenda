@@ -5,11 +5,5 @@ export { default as Day } from './Day'
 export { default as Ticks } from './Ticks'
 export { default as Needle } from './Needle'
 export { default as Crosshair } from './Crosshair'
-export {
-  dateToPixels,
-  pixelsToDate,
-  mouseEventToDate,
-} from './utils'
-export {
-  useResize,
-} from './useResize'
+export { dateToPixels, pixelsToDate, mouseEventToDate, useDragEvent } from './utils'
+export { useResize } from './useResize'
