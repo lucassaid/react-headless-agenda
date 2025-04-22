@@ -36,7 +36,7 @@ export function useResize(eventId: string, roundMinutes = 15) {
       })
 
       if (!isSameDay(event.end, finalNewEndDate)) return
-      if (differenceInMinutes(finalNewEndDate, event.start) < 10) return
+      if (differenceInMinutes(finalNewEndDate, event.start) < 60) return
 
       onEventChange({
         ...event,
