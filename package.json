@@ -1,6 +1,6 @@
 {
   "name": "react-headless-agenda",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Headless agenda for React",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.js",

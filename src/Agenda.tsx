@@ -1,5 +1,5 @@
 import { addDays, startOfWeek } from './date-utils'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import agendaContext, { AgendaContext, BaseAgendaEvent } from './context'
 
 export interface AgendaChildrenProps {
@@ -32,18 +32,32 @@ export default function Agenda<TEvent extends BaseAgendaEvent>({
   const endDate = addDays(new Date(startDate), days - 1)
   const [draggingId, setDraggingId] = useState<string>('')
 
-  const contextValue: AgendaContext<TEvent> = {
-    startDate,
-    endDate,
-    onStartDateChange,
-    events,
-    onEventChange,
-    days,
-    onDragStart,
-    onDrop,
-    draggingId,
-    setDraggingId,
-  }
+  const contextValue = useMemo<AgendaContext<TEvent>>(
+    () => ({
+      startDate,
+      endDate,
+      onStartDateChange,
+      events,
+      onEventChange,
+      days,
+      onDragStart,
+      onDrop,
+      draggingId,
+      setDraggingId,
+    }),
+    [
+      startDate,
+      endDate,
+      onStartDateChange,
+      events,
+      onEventChange,
+      days,
+      onDragStart,
+      onDrop,
+      draggingId,
+      setDraggingId,
+    ]
+  )
 
   const childrenProps: AgendaChildrenProps = {
     prev: () => onStartDateChange(addDays(new Date(startDate), -days)),
