@@ -5,7 +5,7 @@ import {
   addMinutes,
   differenceInMinutes,
 } from './date-utils'
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import agendaContext from './context'
 import { dayContext } from './Day'
 
@@ -35,12 +35,9 @@ export const mouseEventToDate = (e: React.MouseEvent<HTMLElement>, pivotDate = n
   return pixelsToDate(e.clientY - top, height, pivotDate)
 }
 
-export const hideDragGhost = (e: React.DragEvent<HTMLElement>) => {
-  const blankCanvas = document.createElement('canvas')
-  blankCanvas.style.position = 'fixed'
-  document.body.appendChild(blankCanvas)
-  e.dataTransfer.setDragImage(blankCanvas, 0, 0)
-}
+export const emptyCanvas = document.createElement('canvas')
+emptyCanvas.style.position = 'fixed'
+document.body.appendChild(emptyCanvas)
 
 export const useDragEvent = (eventId: string, roundMinutes = 15) => {
   const { events, onDragStart, setDraggingId } = useContext(agendaContext)
@@ -48,7 +45,7 @@ export const useDragEvent = (eventId: string, roundMinutes = 15) => {
 
   const handleDragStart = useCallback(
     (e: React.DragEvent<HTMLElement>) => {
-      hideDragGhost(e)
+      e.dataTransfer.setDragImage(emptyCanvas, 0, 0)
       setDraggingId(eventId)
 
       e.dataTransfer.effectAllowed = 'move'

@@ -1,7 +1,7 @@
 import { DragEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import agendaContext from './context'
 import { dayContext } from './Day'
-import { hideDragGhost, pixelsToDate } from './utils'
+import { emptyCanvas, pixelsToDate } from './utils'
 import { addMinutes, differenceInMinutes, isSameDay, roundToNearestMinutes } from './date-utils'
 
 export function useResize(eventId: string, roundMinutes = 15) {
@@ -16,7 +16,7 @@ export function useResize(eventId: string, roundMinutes = 15) {
       if (!event) return
       e.stopPropagation()
       e.dataTransfer.effectAllowed = 'move'
-      hideDragGhost(e)
+      e.dataTransfer.setDragImage(emptyCanvas, 0, 0)
 
       // difference in minutes between the end of the event and the cursor position
       const mouseDate = pixelsToDate(e.clientY - topRef.current, columnHeight, date)
