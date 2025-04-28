@@ -1,6 +1,6 @@
 {
   "name": "react-headless-agenda",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "Headless agenda for React",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.js",
@@ -66,5 +66,6 @@
     "react-dom": "^18.0.0",
     "storybook": "^7.0.23",
     "tailwindcss": "^3.3.2"
-  }
+  },
+  "type": "module"
 }
